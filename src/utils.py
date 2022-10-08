@@ -8,6 +8,7 @@
 
 
 import os
+import cv2
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -21,8 +22,8 @@ from tqdm import tqdm
 
 plt.style.use('fivethirtyeight')
 
-
-
+ROOT         = "/Users/michaelc.c.h/Desktop/EPFL/"
+TO_DATA_PATH = ""
 
 
 ###################################################### 
@@ -95,3 +96,70 @@ def df_to_timeseries(df, filename):
     for v in range(nbv):
         series[:,v] = np.array(cur_file[cur_file.vindex==v]['score'])
     return series, cur_file
+
+
+
+
+###################################################### 
+################### OS-LEVEL FUNC ####################
+######################################################
+
+
+def loadimg_in_order(unordered_img):
+    """
+    Information:
+    ------------
+    Specifically working for our format of TYPE_FRAMENUMBER.jpg files
+    we extract the numbers to reorder them in increasing order.
+
+    Parameters
+    ----------
+    unordered_img::[list<string>]
+        list of unordered filenames (of images) in the format shown above
+        very specific to our use case
+
+    Returns
+    -------
+    ordered_img::[list<string>]
+        ordered filenames (of images)
+    """
+
+
+    numbers      = [int(r.strip('.jpg').split('_')[1]) for r in unordered_img]
+    sorted_index = np.argsort(numbers)
+    ordered_img  = np.array(unordered_img)[sorted_index]
+
+    return ordered_img
+    
+
+
+def img2video(img_array, fps, outpath_name="out.mp4"):
+    """
+    Information:
+    ------------
+    Read our formatted dataframes to obtain timeseries 
+    in (time,voxels) format of a specific acquisition
+
+    Parameters
+    ----------
+    img_array   ::[4darray<uint8>]
+        Stream of images (most of times RGB) that we want to link as a video
+    
+    fps         ::[int]
+        Encoding/Displaying fps
+    
+    outpath_name::[string]
+        Path and name of the video file to output
+
+    Returns
+    -------
+    None::[None]
+    """    
+    height, width, layers = img_array[0].shape
+    size = (width,height)
+
+    out = cv2.VideoWriter(outpath_name,cv2.VideoWriter_fourcc(*'MP4V'), fps, size)
+    
+    for i in range(len(img_array)):
+        out.write(img_array[i])
+    out.release()
