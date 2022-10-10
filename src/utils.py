@@ -22,6 +22,8 @@ from tqdm import tqdm
 
 plt.style.use('fivethirtyeight')
 
+
+PALETTE      = ['b','r','g','k','c','m','y']
 ROOT         = "/Users/michaelc.c.h/Desktop/EPFL/"
 TO_DATA_PATH = ""
 
@@ -61,7 +63,7 @@ def plot_eigenvector_importance(gradient):
 
 
 ###################################################### 
-################### LOADING FUNC  ####################
+###################  DATA - FUNC  ####################
 ######################################################
 
 
@@ -103,6 +105,16 @@ def df_to_timeseries(df, filename):
 ###################################################### 
 ################### OS-LEVEL FUNC ####################
 ######################################################
+
+import pickle
+### saving and loading made-easy
+def save(pickle_file, array):
+    with open(pickle_file, 'wb') as handle:
+        pickle.dump(array, handle, protocol=pickle.HIGHEST_PROTOCOL)
+def load(pickle_file):
+    with open(pickle_file, 'rb') as handle:
+        b = pickle.load(handle)
+    return b
 
 
 def loadimg_in_order(unordered_img):
