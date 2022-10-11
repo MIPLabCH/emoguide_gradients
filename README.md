@@ -4,7 +4,7 @@ Main points are as follows:
 - fMRI/behavioural dynamic connectivity matrix
 - Connectivity Gradients
 
-![GIF](https://github.com/miki998/connectivity_gradient_analysis/media/readme_plots)
+![GIF](https://github.com/miki998/connectivity_gradient_analysis/blob/master/media/readme_plots/eg_2plots.gif)
 
 
 ## Requirements
