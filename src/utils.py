@@ -32,7 +32,37 @@ TO_DATA_PATH = ""
 ################### VISUALISATION ####################
 ######################################################
 
+def compare_videos(arr1, arr2):
+    """
+    Information:
+    ------------
+    Read our formatted dataframes to obtain timeseries 
+    in (time,voxels) format of a specific acquisition
 
+    Parameters
+    ----------
+    arr1::[4darray<uint8>]
+        First Stream of images (to be concatenated in the left side)
+    
+    arr2::[int]
+        First Stream of images (to be concatenated in the left side)
+
+    Returns
+    -------
+    concat::[4darray<uint8>]
+        Stream of images that were concatenated horizontally together
+    """
+        
+    arr1 = np.asarray(arr1)
+    arr2 = np.asarray(arr2)
+
+    # same number of timepoints: we take the minimum
+    t_min = min(arr1.shape[0], arr2.shape[0])
+    # put a vertical separator of arbitrary color
+    spacer = 240 * np.ones((t_min,arr1.shape[1], 50,3), dtype=np.uint8)
+    concat = np.concatenate([arr1[:t_min],spacer,arr2[:t_min]],axis=2)
+
+    return concat
 
 def plot_eigenvector_importance(gradient):
     """
@@ -47,7 +77,7 @@ def plot_eigenvector_importance(gradient):
 
     Returns
     -------
-    None: [None]
+    None::[None]
     """
 
     fig, ax = plt.subplots(1, figsize=(5, 4))
