@@ -20,7 +20,7 @@ Our requirements are listed in `build/requirements.txt`
     - `cd ./build/`
     - `conda create -n "brain" python=3.8.13`
     - `conda activate brain`
-    - `<PATH TO YOUR CONDA PYTHON EXEC> python -m pip install requirements.txt`
+    - `<PATH TO YOUR CONDA PYTHON EXEC> python -m pip install -r requirements.txt`
 
 * Docker users:
     - Ensure you have correctly installed
