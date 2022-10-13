@@ -29,6 +29,54 @@ TO_DATA_PATH = ""
 TR           = 1.3 # seconds
 
 
+
+###################################################### 
+###################  SIG -- PROC  ####################
+######################################################
+
+
+def zscore(signal):
+    """
+    Information:
+    ------------
+    Remove mean and normalize by standard deviation on any array size
+
+    Parameters
+    ----------
+    signal::[ndarray<float>]
+        Signal to do rolling average on 
+
+    Returns
+    -------
+    score::[ndarray<float>]
+    """    
+    score = (signal - signal.mean()) / signal.std()
+    return score
+
+
+def overlap_add(signal, wsize=3, pad=False):
+    """
+    Information:
+    ------------
+    Smoothen a signal by adding to part of itself to other intervals
+
+    Parameters
+    ----------
+    signal::[1darray<float>]
+        Signal to do rolling average on 
+
+    Returns
+    -------
+    overlapped::[1darray<float>]
+    """
+
+    if pad:
+        overlapped = np.concatenate([np.convolve(signal, np.ones(wsize)/wsize, mode='valid'),signal[-(wsize-1):]])
+    else:
+        overlapped = np.convolve(signal, np.ones(wsize)/wsize, mode='valid')
+    return overlapped
+
+
 ###################################################### 
 ################### VISUALISATION ####################
 ######################################################
