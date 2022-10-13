@@ -26,6 +26,7 @@ plt.style.use('fivethirtyeight')
 PALETTE      = ['b','r','g','k','c','m','y']
 ROOT         = "/Users/michaelc.c.h/Desktop/EPFL/"
 TO_DATA_PATH = ""
+TR           = 1.3 # seconds
 
 
 ###################################################### 
@@ -44,8 +45,8 @@ def compare_videos(arr1, arr2):
     arr1::[4darray<uint8>]
         First Stream of images (to be concatenated in the left side)
     
-    arr2::[int]
-        First Stream of images (to be concatenated in the left side)
+    arr2::[4darray<uint8>]
+        Second Stream of images (to be concatenated in the right side)
 
     Returns
     -------
