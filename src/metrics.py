@@ -9,7 +9,7 @@
 
 import numpy as np
 from scipy import stats
-
+from scipy.spatial import ConvexHull
 
 
 
@@ -86,6 +86,42 @@ def cluster_distance(clst1, clst2, method="closest", pmethod="L1"):
     
     return dist
 
+def network_volume(grad, networkidx, method='distance', pmethod='L2'):
+    """
+    Information:
+    ------------
+    Remove mean and normalize by standard deviation on any array size
+
+    Parameters
+    ----------
+    grad      ::[2darray<float>]
+        Gradients with dimension (nb regions, nb features)
+    
+    networkidx::[array<int>]
+        Indices in the 400 parcellations that belong to a certain network (e.g "Vis")
+    
+    method    ::[string]
+        The type of distance to implement for volume computation
+
+    pmethod   ::[string]
+        The type of distance to implement for two points
+
+    Returns
+    -------
+    dist::[float]
+    """    
+    n = len(networkidx)
+    if method == 'distance':
+        A = grad[networkidx,0]
+        B = grad[networkidx,1]
+        centroid = np.array([A.mean(), B.mean()])
+        dist = np.mean([points_distance(pts, centroid, pmethod=pmethod) for pts in grad])
+
+    elif method == 'hull':
+        hull = ConvexHull(grad)
+        dist = hull.volume
+
+    return dist
 
 
 def correlation_search(arr1, arr2, tolshift, find=0):

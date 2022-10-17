@@ -15,6 +15,14 @@ import matplotlib.pyplot as plt
 
 from tqdm import tqdm
 
+# Brain Imaging specifics
+from nilearn.connectome import ConnectivityMeasure
+from brainspace.gradient import GradientMaps
+
+from brainspace.plotting import plot_hemispheres
+from brainspace.utils.parcellation import map_to_labels
+from brainspace.datasets import load_group_fc, load_parcellation, load_conte69
+
 
 ###################################################### 
 ################### GLOB VARIABLES ###################
