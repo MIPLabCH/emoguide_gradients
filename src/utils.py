@@ -23,10 +23,13 @@ from tqdm import tqdm
 plt.style.use('fivethirtyeight')
 
 
-PALETTE      = ['b','r','g','k','c','m','y']
-ROOT         = "/Users/michaelc.c.h/Desktop/EPFL/"
-TO_DATA_PATH = ""
-TR           = 1.3 # seconds
+PALETTE       = ['b','r','g','k','c','m','y']
+ROOT          = "/Users/michaelc.c.h/Desktop/EPFL/"
+TO_DATA_PATH  = ""
+TR            = 1.3 # seconds
+FILM2DURATION = {'AfterTheRain': 496, 'BetweenViewings': 808, 'BigBuckBunny': 490, 'Chatter': 405, 'FirstBite': 599, 'LessonLearned': 667, 'Payload': 1008, 'Sintel': 722, 'Spaceman': 805, 'Superhero': 1028, 'TearsOfSteel': 588, 'TheSecretNumber': 784, 'ToClaireFromSonny': 402, 'YouAgain': 798}
+# film_name     = "After The Rain, Between Viewings, Big Buck Bunny, Chatter, First Bite, Lesson Learned, Payload, Sintel, Spaceman, Superhero, Tears Of Steel, The Secret Number, To Claire From Sonny, You Again"
+# film_duration = "8:16, 13:28, 8:10,  6:45, 9:59, 11:07, 16:48, 12:02, 13:25, 17:08, 9:48, 13:04, 6:42, 13:18"
 
 
 
