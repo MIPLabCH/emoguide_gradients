@@ -110,11 +110,8 @@ def network_volume(grad, networkidx, method='distance', pmethod='L2'):
     -------
     dist::[float]
     """    
-    n = len(networkidx)
     if method == 'distance':
-        A = grad[networkidx,0]
-        B = grad[networkidx,1]
-        centroid = np.array([A.mean(), B.mean()])
+        centroid = np.asarray([np.mean(grad[networkidx,i]) for i in range(grad.shape[1])])
         dist = np.mean([points_distance(pts, centroid, pmethod=pmethod) for pts in grad])
 
     elif method == 'hull':
