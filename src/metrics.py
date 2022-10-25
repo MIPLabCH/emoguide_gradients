@@ -86,6 +86,30 @@ def cluster_distance(clst1, clst2, method="closest", pmethod="L1"):
     
     return dist
 
+def gradients_distance(g1, g2, pmethod="L1"):
+    """
+    Information:
+    ------------
+    Compute distance between two clusters
+
+    Parameters
+    ----------
+    g1  ::[2darray<float>]
+        gradient of a given FC matrix (dimension (nb_region, nb_features))
+    g2  ::[2darray<float>]
+        gradient of a given FC matrix (dimension (nb_region, nb_features))
+    pmethod::[string]
+        The type of distance to implement for two points
+
+    Returns
+    -------
+    dist::[float]
+        Distance between the two gradients (also a distance used for procrustes value)
+    """
+            
+    dist = np.sum([points_distance(g1[n],g2[n], pmethod=pmethod) for n in range(len(g1))])
+    return dist    
+
 def network_volume(grad, networkidx, method='distance', pmethod='L2'):
     """
     Information:
