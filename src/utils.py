@@ -14,6 +14,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+from copy import deepcopy
+
 from tqdm import tqdm
 
 # Brain Imaging specifics
