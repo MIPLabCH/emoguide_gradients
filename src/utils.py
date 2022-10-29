@@ -155,6 +155,24 @@ def plot_eigenvector_importance(gradient):
 
     plt.show()
 
+def plot_gradient_cortical(gradients,label_text):
+    """ temporary not sure if useful yet"""
+    labeling         = load_parcellation('schaefer', scale=400, join=True)
+    surf_lh, surf_rh = load_conte69()
+
+    mask = labeling != 0
+
+    # TODO: to fix, we are currently artificially fixing the value bar
+    grad = [None] * len(gradients)
+    for k in range(2):
+        # map the gradient to the parcels
+        grad[k] = map_to_labels(gradients[k], labeling, mask=mask, fill=np.nan)
+
+    plot_hemispheres(surf_lh, surf_rh, array_name=grad, size=(1000, 600), cmap='hot',
+                    color_bar=True, label_text=label_text, zoom=1.25, embed_nb=True, interactive=False,
+                    transparent_bg=False)
+
+
 
 
 ###################################################### 
