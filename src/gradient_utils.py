@@ -71,9 +71,16 @@ def FC(series):
     fc::[2darray<float>]
         FC of interest of dimension : (nb regions, nb regions)
     """
+    # Removal of NaN
+    S = series[np.isnan(series).sum(axis=1) == 0]
+
+    # Arbitrary cutoff for relevance of correlation
+    if S.shape[0] < 10: 
+        print("Less than 10 timepoints for correlation")
+        return 0 
 
     correlation_measure = ConnectivityMeasure(kind='correlation')
-    fc = correlation_measure.fit_transform([series])[0]
+    fc = correlation_measure.fit_transform([S])[0]
     return fc
 
 def sliding_window_FC(series, ws, step=1):

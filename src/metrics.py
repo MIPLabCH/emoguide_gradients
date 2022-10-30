@@ -112,6 +112,30 @@ def gradients_distance(g1, g2, pmethod="L1"):
     dist = np.sum([points_distance(g1[n],g2[n], pmethod=pmethod) for n in range(len(g1))])
     return dist    
 
+def network_position(grad, network, grad_idx=0):
+    """
+    Information:
+    ------------
+    Remove mean and normalize by standard deviation on any array size
+
+    Parameters
+    ----------
+    grad      ::[2darray<float>]
+        Gradients with dimension (nb regions, nb features)
+    
+    network   ::[str]
+        Network name: that points to indices in the 400 parcellations that belong to a certain network (e.g "Vis")
+    
+    grad_idx  ::[int]
+        Which gradient we are estimating the variance of
+
+    Returns
+    -------
+    dist::[float]
+    """        
+    dist = np.abs(grad[:,index2region[network]]).mean(axis=1)[:,grad_idx]
+    return dist
+
 def network_variance(grad, network, grad_idx=0):
     """
     Information:
