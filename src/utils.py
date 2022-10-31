@@ -47,6 +47,24 @@ FILM2DURATION = {'AfterTheRain': 496, 'BetweenViewing': 808, 'BigBuckBunny': 490
 ###################  SIG -- PROC  ####################
 ######################################################
 
+def sscore(signal):
+    """
+    Information:
+    ------------
+    Shift and Scale signal
+
+    Parameters
+    ----------
+    signal::[ndarray<float>]
+        Signal shift and scale
+
+    Returns
+    -------
+    score::[ndarray<float>]
+    """    
+    signal = (signal - signal.min())
+    score  = signal / signal.max()
+    return score
 
 def zscore(signal, ret_param=False):
     """
@@ -57,7 +75,7 @@ def zscore(signal, ret_param=False):
     Parameters
     ----------
     signal::[ndarray<float>]
-        Signal to do rolling average on 
+        Signal remove mean and normalize
 
     Returns
     -------
