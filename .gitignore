@@ -5,6 +5,7 @@ __pycache__/
 *.jpg
 *.mp4
 *.pkl
+zeal/
 
 # C extensions
 *.so
