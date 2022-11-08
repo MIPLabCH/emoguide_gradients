@@ -115,5 +115,31 @@ def sliding_window_FC(series, ws, step=1):
     
     return dFC
 
+def jackknife_FC(series):
+    """
+    Information:
+    ------------
+    Compute the dynamic functional connectivity matrices of a timeseries of fMRI
+
+    Parameters
+    ----------
+    series::[2darray<float>]
+        fMRI timeseries of dimension : (nb timepoints, nb regions)
+
+    Returns
+    -------
+    dFC::[3darray<float>]
+        Dynamic FC of interest of dimension : (nb timestamp, nb regions, nb regions)
+    """
+    nbr, nbt = series.T.shape
+
+    dFC = np.zeros((nbt, nbr,nbr))
+    for sidx in range(0, nbt):
+        # Jackknife sampling
+        T = np.concatenate([series[:sidx], series[sidx+1:]])
+        dFC[sidx] = -FC(T)
+    
+    return dFC    
+
 
 

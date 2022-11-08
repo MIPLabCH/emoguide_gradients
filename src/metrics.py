@@ -187,7 +187,7 @@ def network_volume(grad, network, method='distance', pmethod='L2'):
     """    
     if method == 'distance':
         centroid = np.asarray([np.mean(grad[index2region[network],i]) for i in range(grad.shape[1])])
-        dist = np.mean([points_distance(pts, centroid, pmethod=pmethod) for pts in grad])
+        dist     = np.mean([points_distance(pts, centroid, pmethod=pmethod) for pts in grad])
 
     elif method == 'hull':
         hull = ConvexHull(grad)

@@ -1,0 +1,13 @@
+BigBuckBunny_zeal_Fear
+Chatter_zeal_Predictable
+FirstBite_zeal_Throat
+Spaceman_zeal_Care
+BigBuckBunny_zeal_Care
+TheSecretNumber_zeal_WarmHeartedness
+YouAgain_zeal_Suddenly
+Sintel_zeal_Surprise
+Spaceman_zeal_Surprise
+LessonLearned_zeal_Tears
+BigBuckBunny_zeal_Tears
+TearsOfSteel_zeal_Tears
+FirstBite_zeal_Tears

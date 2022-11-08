@@ -33,14 +33,14 @@ from brainspace.datasets import load_group_fc, load_parcellation, load_conte69
 
 plt.style.use('fivethirtyeight')
 
-
-PALETTE       = ['b','r','g','k','c','m','y']
-ROOT          = "/Users/michaelc.c.h/Desktop/EPFL/"
-TO_DATA_PATH  = ""
+# PALETTE       = ['b','r','g','k','c','m','y']
+PALETTES = ['PuOr', 'hsv', 'hsv', 'Spectral']
 TR            = 1.3 # seconds
 FILM2DURATION = {'AfterTheRain': 496, 'BetweenViewing': 808, 'BigBuckBunny': 490, 'Chatter': 405, 'FirstBite': 599, 'LessonLearned': 667, 'Payload': 1008, 'Sintel': 722, 'Spaceman': 805, 'Superhero': 1028, 'TearsOfSteel': 588, 'TheSecretNumber': 784, 'ToClaireFromSonny': 402, 'YouAgain': 798}
 
-
+# trim the washimg time for movies before and after
+WASH  = 93.9/ TR # duration in seconds for wash is 93.9 sec
+ONSET = 6 / TR # duration of onset is assumed to be 6 sec
 
 
 ###################################################### 
@@ -74,9 +74,11 @@ def zscore(signal, ret_param=False):
 
     Parameters
     ----------
-    signal::[ndarray<float>]
+    signal    ::[ndarray<float>]
         Signal remove mean and normalize
 
+    ret_params::[Bool]
+        Whether we return the mean and standard deviation of original signal
     Returns
     -------
     score::[ndarray<float>]
@@ -99,6 +101,13 @@ def overlap_add(signal, wsize=3, pad=False):
     signal::[1darray<float>]
         Signal to do rolling average on 
 
+    ws    ::[int]
+        Window size to do rolling average on
+
+    pad   ::[Bool]
+        If true then pad the boundaries to return an array of same size as input
+        If false then leave boundaries not computed
+
     Returns
     -------
     overlapped::[1darray<float>]
@@ -110,6 +119,30 @@ def overlap_add(signal, wsize=3, pad=False):
         overlapped = np.convolve(signal, np.ones(wsize)/wsize, mode='valid')
     return overlapped
 
+def low_pass(signal, ks=10):
+    """
+    Information:
+    ------------
+    Smoothen a signal by adding to part of itself to other intervals
+
+    Parameters
+    ----------
+    signal::[1darray<float>]
+        Signal to do local average / smooth on 
+        
+    ks    ::[int]
+        Kernel size
+
+    Returns
+    -------
+    convolved::[1darray<float>]
+    """    
+    convolved = np.convolve(signal, np.ones(ks)/ks, 'same')
+    return convolved
+
+
+def resize_like():
+    pass
 
 ###################################################### 
 ################### VISUALISATION ####################
@@ -237,6 +270,8 @@ def df_to_timeseries(df, filename):
 ################### OS-LEVEL FUNC ####################
 ######################################################
 
+
+
 import pickle
 ### saving and loading made-easy
 def save(pickle_file, array):
@@ -274,14 +309,58 @@ def loadimg_in_order(unordered_img):
 
     return ordered_img
     
+def video2img(video_path, start_idx, end_idx):
+    """
+    Information:
+    ------------
+    Convert mp4 video into stream of numpy arrays
+
+    Parameters
+    ----------
+    video_path::[string]
+        Path to the video to read
+
+    start_idx ::[int]
+        frame of the video to start reading from
+
+    end_idx   ::[int]
+        frame of the video to stop reading at
+
+    Returns
+    -------
+    frames::[4darray<uint8>]
+        Stream of images (most of times RGB) that we obtain from reading the video
+    """        
+    frames = []
+    # Create a VideoCapture object and read from input file
+    # If the input is the camera, pass 0 instead of the video file name
+    cap = cv2.VideoCapture(video_path)
+    
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    print("Display FPS is: {}".format(fps))
+    # Check if camera opened successfully
+    if (cap.isOpened()== False):
+        print("Error opening video stream or file")
+
+    for frame_id in range(start_idx,end_idx):
+        # Capture frame-by-frame
+        cap.set(cv2.CAP_PROP_POS_FRAMES, frame_id)
+        ret, frame = cap.read()
+        if ret == True:
+            frames.append(frame)
+
+    # When everything done, release the video capture object
+    cap.release()
+
+    frames = np.asarray(frames)
+    return frames
 
 
 def img2video(img_array, fps, outpath_name="out.mp4"):
     """
     Information:
     ------------
-    Read our formatted dataframes to obtain timeseries 
-    in (time,voxels) format of a specific acquisition
+    Convert a stream of RGB images into mp4 video
 
     Parameters
     ----------
