@@ -31,7 +31,7 @@ from brainspace.datasets import load_group_fc, load_parcellation, load_conte69
 ################### GLOB VARIABLES ###################
 ######################################################
 
-plt.style.use('fivethirtyeight')
+# plt.style.use('fivethirtyeight')
 
 # PALETTE       = ['b','r','g','k','c','m','y']
 PALETTES = ['PuOr', 'hsv', 'hsv', 'Spectral']
@@ -175,7 +175,7 @@ def compare_videos(arr1, arr2):
     # same number of timepoints: we take the minimum
     t_min = min(arr1.shape[0], arr2.shape[0])
     # put a vertical separator of arbitrary color
-    spacer = 240 * np.ones((t_min,arr1.shape[1], 50,3), dtype=np.uint8)
+    spacer = 255 * np.ones((t_min,arr1.shape[1], 50,3), dtype=np.uint8)
     concat = np.concatenate([arr1[:t_min],spacer,arr2[:t_min]],axis=2)
 
     return concat
