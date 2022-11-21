@@ -148,6 +148,35 @@ def resize_like():
 ################### VISUALISATION ####################
 ######################################################
 
+def plot_spectrum(sig, sampling_rate=1/TR, ls=0, rs=1):
+    """
+    Information:
+    ------------
+    Plot power spectrum of a signal
+
+    Parameters
+    ----------
+    sig           ::[1darray<float>]
+    sampling_rate ::[int]
+
+    Returns
+    -------
+    None::[None]
+    """    
+    fourier_transform = np.fft.rfft(sig)
+    abs_fourier_transform = np.abs(fourier_transform)
+    power_spectrum = np.square(abs_fourier_transform)
+
+    frequency = np.linspace(0, sampling_rate/2, len(power_spectrum))
+
+    plt.plot(frequency, power_spectrum, label='spectre')
+    plt.legend()
+    plt.xlabel('Freq')
+    plt.title("Power spectrum")
+    plt.xlim(ls,rs)
+    plt.show()
+
+
 def compare_videos(arr1, arr2):
     """
     Information:
