@@ -14,6 +14,7 @@ from scipy.spatial import ConvexHull
 from src.utils import *
 
 index2region = load('./resources/yeo7region400.pkl')
+region2index = load('./resources/region400yeo7.pkl')
 
 
 ###################################################### 
@@ -161,6 +162,49 @@ def network_variance(grad, network, grad_idx=0):
     return dist
 
 
+def parcel_to_network(full_grad, type='grad_centroid', pmethod='L2'):
+    """
+    Information:
+    ------------
+    Compute the distance of each parcels to its respective network or to the general gradient
+
+    Parameters
+    ----------
+    full_grad ::[2darray<float>]
+        Gradients with dimension (nb regions, nb features)
+    
+    type      ::[str]
+        Name of the reference to compute distance to parcels either "grad_centroid" or "net_centroid"
+
+    pmethod   ::[string]
+        The type of distance to implement for two points
+
+    Returns
+    -------
+    dist::[1darray<float>]
+    """
+
+    if type == "grad_centroid":
+        centroid = np.asarray([np.mean(full_grad[:,i]) for i in range(full_grad.shape[1])])
+        dist     = np.array([points_distance(pts, centroid, pmethod=pmethod) for pts in full_grad])
+    elif type == "net_centroid":
+        centroid_dict = {}
+        for network in index2region.keys():
+            net_grad = full_grad[index2region[network]]
+            centroid_dict[network] = np.asarray([np.mean(net_grad[:,i]) for i in range(net_grad.shape[1])])
+
+        dist = []
+        for idx,pts in enumerate(full_grad):
+            centroid = centroid_dict[region2index[idx]]
+            dist.append(points_distance(pts, centroid, pmethod=pmethod))
+
+        dist = np.array(dist)
+    
+    return dist
+
+
+
+
 def network_volume(grad, network, method='distance', pmethod='L2'):
     """
     Information:
@@ -191,7 +235,7 @@ def network_volume(grad, network, method='distance', pmethod='L2'):
         net_grad = grad[index2region[network]]
         
     if method == 'distance':
-        centroid = np.asarray([np.mean(net_grad[:,i]) for i in range(grad.shape[1])])
+        centroid = np.asarray([np.mean(net_grad[:,i]) for i in range(net_grad.shape[1])])
         dist     = np.mean([points_distance(pts, centroid, pmethod=pmethod) for pts in net_grad])
 
     elif method == 'hull':
