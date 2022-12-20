@@ -47,6 +47,65 @@ ONSET = 6 / TR # duration of onset is assumed to be 6 sec
 ###################  SIG -- PROC  ####################
 ######################################################
 
+
+### NI-EDU - copied code "GLM inference"
+def design_variance(X, which_predictor=1):
+    ''' Returns the design variance of a predictor (or contrast) in X.
+    
+    Parameters
+    ----------
+    X : numpy array
+        Array of shape (N, P)
+    which_predictor : int or list/array
+        The index of the predictor you want the design var from.
+        Note that 0 refers to the intercept!
+        Alternatively, "which_predictor" can be a contrast-vector
+        (which will be discussed later this lab).
+        
+    Returns
+    -------
+    des_var : float
+        Design variance of the specified predictor/contrast from X.
+    '''
+    
+    is_single = isinstance(which_predictor, int)
+    if is_single:
+        idx = which_predictor
+    else:
+        idx = np.array(which_predictor) != 0
+    
+    c = np.zeros(X.shape[1])
+    c[idx] = 1 if is_single == 1 else which_predictor[idx]
+    des_var = c.dot(np.linalg.inv(X.T.dot(X))).dot(c.T)
+    return des_var
+
+def local_average(signal,ks):
+    """
+    Information:
+    ------------
+    Compute local average per timepoint
+
+    Parameters
+    ----------
+    signal  ::[1darray<float>]
+    
+    ks      ::[int]
+        Kernel size for averaging
+
+
+    Returns
+    -------
+    res  ::[1darray<float>]
+        locally averaged signal
+    """
+
+    size = len(signal)
+    res  = np.zeros((size // ks+1))
+    for idx,k in enumerate(range(0,len(signal), ks)):
+        res[idx] = signal[k:k+ks].mean()
+    return res
+
+
 def sscore(signal):
     """
     Information:
@@ -252,7 +311,68 @@ def plot_gradient_cortical(gradients,label_text):
                     color_bar=True, label_text=label_text, zoom=1.25, embed_nb=True, interactive=False,
                     transparent_bg=False)
 
+def visualize_jointplot_dc_grad(outname, dc_grad, wsub=False, framerate=10, ws=40):
+    """
+    Information:
+    ------------
+    Generate video mp4 visualizing dynamic gradients
 
+    Parameters
+    ----------
+    outname  ::[String]
+        Prefix Name of the file
+    
+    dc_grad  ::[3darray<float>]
+        dynamic gradients
+        dim:(# of windows, # of parcels, # of gradient dimension)
+
+    wsub     ::[Bool]
+        Is the dynamic gradients including subcortical regions? 
+    
+    framerate::[Int]
+        Frame rate of outputed mp4
+
+    ws       ::[Int]
+        Window size of dynamic gradient
+
+    Returns
+    -------
+    None::[None]
+    """
+    pal       = sns.color_palette('colorblind', 8)
+    if wsub:
+        partial_region = load('./resources/region414yeo7.pkl')
+        coloring  = [partial_region[i] for i in range(414)]
+    else:    
+        partial_region = load('./resources/region400yeo7.pkl')
+        coloring  = [partial_region[i] for i in range(400)]
+    
+    # figure size that is saved
+
+    tosave = []
+    for j in tqdm(range(len(dc_grad))):
+        tmp_df = {"G1":dc_grad[j][:,0] , "G2": dc_grad[j][:,1], "region": coloring}
+        tmp_df = pd.DataFrame.from_dict(tmp_df)
+        ax     = sns.jointplot(data=tmp_df, x="G1", y="G2", 
+                    hue="region", height=7, 
+                    xlim=(dc_grad[:,:,0].min()-10,dc_grad[:,:,0].max()+10), 
+                    ylim=(dc_grad[:,:,1].min()-10,dc_grad[:,:,1].max()+10), palette=pal)
+        ax.fig.suptitle("Gradients's closenedness plot ({})".format(outname), fontsize=12)
+        legend_properties = {'weight':'bold','size':5}
+        ax.ax_joint.legend(prop=legend_properties,loc='upper right')
+        ax.ax_joint.set_xlabel('G1',fontsize=10)
+        ax.ax_joint.set_ylabel('G2',fontsize=10)
+        w,h = ax.fig.canvas.get_width_height()
+
+        ax.fig.canvas.draw()
+        img_arr = np.fromstring(ax.fig.canvas.tostring_rgb(), 
+                        dtype=np.uint8,
+                        sep='')
+        img_arr = img_arr.reshape(w,h,3)[:,:,::-1]
+        tosave.append(img_arr)
+        
+    plt.close("all")
+    img2video(tosave, framerate, outpath_name='./media/{}_plots_ws{}.mp4'.format(outname,ws))
 
 
 ###################################################### 
@@ -361,15 +481,21 @@ def video2img(video_path, start_idx, end_idx):
         Stream of images (most of times RGB) that we obtain from reading the video
     """        
     frames = []
+
     # Create a VideoCapture object and read from input file
     # If the input is the camera, pass 0 instead of the video file name
-    cap = cv2.VideoCapture(video_path)
-    
-    fps = cap.get(cv2.CAP_PROP_FPS)
+    cap            = cv2.VideoCapture(video_path)
+    total_nb_frame = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))    
+    fps            = cap.get(cv2.CAP_PROP_FPS)
+
     print("Display FPS is: {}".format(fps))
     # Check if camera opened successfully
     if (cap.isOpened()== False):
         print("Error opening video stream or file")
+
+    # Set to last frames if -1 is encodeds
+    if end_idx == -1:
+        end_idx = total_nb_frame
 
     for frame_id in range(start_idx,end_idx):
         # Capture frame-by-frame

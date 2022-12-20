@@ -15,7 +15,7 @@ from brainspace.gradient import procrustes_alignment
 ################### ALIGNEMENT-GRAD ##################
 ######################################################
 
-def procrustes_align(list_gradients, ref=None, score_flag=True, n_iter=100):
+def procrustes_align(list_gradients, ref=None, score_flag=True, n_iter=100, tol=1e-5):
     """
     Information:
     ------------
@@ -41,7 +41,7 @@ def procrustes_align(list_gradients, ref=None, score_flag=True, n_iter=100):
     score            ::[float]
         Average procrustes alignment score on across all alignments
     """    
-    aligned_gradients, ref = procrustes_alignment(list_gradients, reference=ref, return_reference=True, n_iter=n_iter)
+    aligned_gradients, ref = procrustes_alignment(list_gradients, reference=ref, return_reference=True, n_iter=n_iter, tol=tol)
     score     = None
     if score_flag:
         score = np.mean([procrustes_score(ref,aligned_gradients[i]) for i in range(len(aligned_gradients))])
