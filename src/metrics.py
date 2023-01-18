@@ -306,6 +306,30 @@ def networks_distance(G1, G2, N1, N2, method="centroid"):
     return dist
 
 
+def pearson_correlation(arr1,arr2):
+    """
+    Information:
+    ------------
+    Direct pearson correlation
+
+    Parameters
+    ----------
+    arr1   ::[1darray<float>]
+        First signal
+
+    arr2   ::[1darray<float>]
+        Second signal
+
+    Returns
+    -------
+    corr ::[float]
+        Correlation value modulo shift with limited tolerance
+        
+    """
+    
+    corr = stats.pearsonr(arr1, arr2).statistic
+    return corr
+
 def correlation_search(arr1, arr2, tolshift, find=0):
     """
     Information:

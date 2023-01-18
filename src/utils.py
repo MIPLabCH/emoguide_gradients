@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 
 from copy import deepcopy
 
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 # Brain Imaging specifics
 from nilearn.connectome import ConnectivityMeasure
