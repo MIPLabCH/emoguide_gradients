@@ -56,7 +56,7 @@ def procrustes_align(list_gradients, ref=None, score_flag=True, n_iter=100, tol=
 
 
 
-def FC(series):
+def FC(series,verbose=False):
     """
     Information:
     ------------
@@ -77,7 +77,7 @@ def FC(series):
 
     # Arbitrary cutoff for relevance of correlation
     if S.shape[0] < 10: 
-        print("Less than 10 timepoints for correlation")
+        if verbose: print("Less than 10 timepoints for correlation")
         return 0 
 
     correlation_measure = ConnectivityMeasure(kind='correlation')
