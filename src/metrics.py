@@ -14,7 +14,7 @@ from scipy.spatial import ConvexHull
 from src.utils import *
 
 index2region = load('./resources/yeo7region414.pkl')
-region2index = load('./resources/region400yeo7.pkl')
+region2index = load('./resources/region414yeo7.pkl')
 
 # Selected Item Representing emotions
 select = ['Anger','Guilt','WarmHeartedness', \
