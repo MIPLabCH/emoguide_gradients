@@ -70,7 +70,7 @@ def moviemix_stat_test(totest, mainseries, mixseries):
     -------
     ndistrib::[1darray<float>]
     nscore  ::[float]
-    cur     ::[float]s
+    cur     ::[float]
         p-value
     """    
 
@@ -92,3 +92,47 @@ def moviemix_stat_test(totest, mainseries, mixseries):
     nscore   = null_score(ndistrib, cur)
     return ndistrib, nscore, cur    
 
+
+def shift_series_nulldistribution(Y, othermoviesdf, emotion_df, smfactor=1):
+    """
+    Information:
+    ------------
+    (Wrap moviemixstat)
+    Compute null distribution and main correlation
+    (null distrib is defined as set of correlations obtained from
+    all continuous timecourses of same size as the main one applied on all 
+    the other timecourses)
+
+    Parameters
+    ----------
+    Y            ::[1darray<float>]
+        Metric series
+    othermoviesdf::[DataFrame]
+        Dataframe of other movies 
+    emotion_df   ::[DataFrame]
+        Dataframe of current movie with which we computed Y. All emotions are considered for the current movie.
+    
+
+    Returns
+    -------
+    ret_score  ::[1darray<float>]
+        correlations for each emotion
+    ret_nscore ::[1darray<float>]
+        p-value for each emotion
+    """    
+
+    ret_nscore = np.zeros((len(select)))
+    ret_score  = np.zeros((len(select)))
+
+    z1 = zscore(Y)
+    for jdx, emotion in enumerate(select):
+        concat_other = np.array(othermoviesdf[othermoviesdf.item == emotion]['score'])
+        emo_series   = np.array(emotion_df[emotion_df.item==emotion]['score'])
+        smoothened   = overlap_add(emo_series, smfactor)
+        z2           = zscore(smoothened[:z1.shape[0]])
+
+        _, nscore, corr = moviemix_stat_test(z1, z2, concat_other)
+        ret_nscore[jdx] = nscore
+        ret_score[jdx]  = corr
+    
+    return ret_score, ret_nscore
