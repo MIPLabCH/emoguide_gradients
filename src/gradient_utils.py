@@ -45,7 +45,7 @@ def procrustes_align(list_gradients, ref=None, score_flag=True, n_iter=100, tol=
     score     = None
     if score_flag:
         # score = np.mean([procrustes_score(ref,aligned_gradients[i]) for i in range(len(aligned_gradients))])
-        score = [procrustes_score(ref,aligned_gradients[i]) for i in range(len(aligned_gradients))]
+        score = [procrustes_score(ref ,aligned_gradients[i]) for i in range(len(aligned_gradients))]
     
     return aligned_gradients, ref, score
     
