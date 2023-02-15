@@ -53,3 +53,6 @@ https://github.com/MICA-MNI/BrainSpace
 ```
 
 
+
+
+ENIGMA toolbox is to be installed spearately following guides online. ENIGMA toolbox is used for subcortical displays
