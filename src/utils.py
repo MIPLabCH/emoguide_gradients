@@ -7,41 +7,24 @@
 """
 
 
-import os
+
 import cv2
 import seaborn as sns
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from copy import deepcopy
+
+import pickle
 
 from tqdm.auto import tqdm
 
-# Brain Imaging specifics
-from nilearn.connectome import ConnectivityMeasure
-from brainspace.gradient import GradientMaps
-
 from brainspace.plotting import plot_hemispheres
 from brainspace.utils.parcellation import map_to_labels
-from brainspace.datasets import load_group_fc, load_parcellation, load_conte69
+from brainspace.datasets import load_parcellation, load_conte69
 
 
-###################################################### 
-################### GLOB VARIABLES ###################
-######################################################
-
-# plt.style.use('fivethirtyeight')
-
-# PALETTE       = ['b','r','g','k','c','m','y']
-PALETTES = ['PuOr', 'hsv', 'hsv', 'Spectral']
-TR            = 1.3 # seconds
-FILM2DURATION = {'AfterTheRain': 496, 'BetweenViewing': 808, 'BigBuckBunny': 490, 'Chatter': 405, 'FirstBite': 599, 'LessonLearned': 667, 'Payload': 1008, 'Sintel': 722, 'Spaceman': 805, 'Superhero': 1028, 'TearsOfSteel': 588, 'TheSecretNumber': 784, 'ToClaireFromSonny': 402, 'YouAgain': 798}
-
-# trim the washimg time for movies before and after
-WASH  = 93.9/ TR # duration in seconds for wash is 93.9 sec
-ONSET = 6 / TR # duration of onset is assumed to be 6 sec
-
+from src.constants import *
 
 ###################################################### 
 ###################  SIG -- PROC  ####################
@@ -421,7 +404,6 @@ def df_to_timeseries(df, filename):
 
 
 
-import pickle
 ### saving and loading made-easy
 def save(pickle_file, array):
     with open(pickle_file, 'wb') as handle:

@@ -7,7 +7,7 @@
 """
 
 from src.utils import *
-from src.metrics import *
+from src.gradient_metrics import *
 
 ###################################################### 
 ################### FUNC-CONNECTIV ###################
@@ -72,7 +72,7 @@ def moviemix_stat_test(totest, mainseries, mixseries):
     nscore  ::[float]
     cur     ::[float]
         p-value
-    """    
+    """
 
     # Obtained sample correlation
     mainseries = overlap_add(mainseries, 1)

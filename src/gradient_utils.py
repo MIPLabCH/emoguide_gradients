@@ -7,7 +7,7 @@
 """
 
 
-from src.metrics import procrustes_score
+from src.gradient_metrics import procrustes_score
 from src.utils import *
 from brainspace.gradient import procrustes_alignment
 
