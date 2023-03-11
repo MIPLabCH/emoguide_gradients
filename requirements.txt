@@ -68,3 +68,8 @@ bioinfokit==2.1.0
 pingouin==0.5.3
 torch==1.13.1
 plotly==5.13.0
+sphinx
+myst-parser
+rst-to-myst[sphinx]
+sphinx-autobuild
+nbsphinx

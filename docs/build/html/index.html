@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jelly-Emotions &mdash; Jelly-Emo 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="1. Exploring the dataset" href="notebooks/01_explore-loading.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            Jelly-Emo
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/01_explore-loading.html">1. Exploring the dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/03_fmri_static_gradient.html">3. Computing Static Gradients</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/05_fmri_dynamic_gradient.html">4. Computing Dynamic Gradients</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/06_fmri_gradient_metrics.html">5. Extracting Gradients Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/08_fmri_personality_index.html">7. Predicting Personality Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/09_fmri_gradient_rest-films_order.html">8. Ordering based on Gradients</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/10_fmri_gradient_stability.html">9. Sample Gradient Stability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/12_fmri_frame-selection.html">10. Frame-Selection based Gradients</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/14_fmri_identifiability.html">12. Matching Gradients</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/15_fmri_emotion_networks.html">13. Emotion Count across Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/16_fmri_emotionintensity_prediction.html">14. Predicting Emotion Intensity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Jelly-Emo</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Jelly-Emotions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="jelly-emotions">
+<h1>Jelly-Emotions<a class="headerlink" href="#jelly-emotions" title="Permalink to this heading"></a></h1>
+<p><img alt="GIF" src="_images/Jelly-Move.gif" /></p>
+<p>NOTE: Our code is largely notebook based.</p>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
+<p>Our requirements are listed in <code class="docutils literal notranslate"><span class="pre">build/requirements.txt</span></code></p>
+<ul class="simple">
+<li><p>Unix is supported, but we mostly used Mac OS.</p></li>
+<li><p>64-bit Python 3.8 is the version we use (or later version can be used).</p></li>
+<li><p>CUDA toolkit 11.1 or later.</p></li>
+<li><p>Python libraries: see <a class="reference internal" href="#./build/requirements.txt"><span class="xref myst">requirements.txt</span></a> for exact library dependencies. You can use the following
+commands with Miniconda3 to create and activate your <code class="docutils literal notranslate"><span class="pre">brain</span></code> Python environment:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">./build/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">create</span> <span class="pre">-n</span> <span class="pre">&quot;brain&quot;</span> <span class="pre">python=3.8.13</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">brain</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;PATH</span> <span class="pre">TO</span> <span class="pre">YOUR</span> <span class="pre">CONDA</span> <span class="pre">PYTHON</span> <span class="pre">EXEC&gt;</span> <span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code></p></li>
+</ul>
+</li>
+<li><p>Docker users:</p>
+<ul>
+<li><p>Ensure you have correctly installed
+the <a class="reference external" href="https://docs.docker.com/config/containers/resource_constraints/#gpu">NVIDIA container runtime</a>.</p></li>
+<li><p>Use the <a class="reference internal" href="#./Dockerfile"><span class="xref myst">Dockerfile</span></a> to build an image with the required library dependencies.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="acknowledgement">
+<h2>Acknowledgement<a class="headerlink" href="#acknowledgement" title="Permalink to this heading"></a></h2>
+<p>We borrow a lot from these repositories:</p>
+<p>**BrainSpace</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">MICA</span><span class="o">-</span><span class="n">MNI</span><span class="o">/</span><span class="n">BrainSpace</span>
+</pre></div>
+</div>
+<p>ENIGMA toolbox is to be installed spearately following guides online. ENIGMA toolbox is used for subcortical displays</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This analysis sets is under developments</p>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/01_explore-loading.html">1. Exploring the dataset</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/01_explore-loading.html#Description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/01_explore-loading.html#Table-of-Contents">Table of Contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/03_fmri_static_gradient.html">3. Computing Static Gradients</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/03_fmri_static_gradient.html#Description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/03_fmri_static_gradient.html#Table-of-Contents">Table of Contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/05_fmri_dynamic_gradient.html">4. Computing Dynamic Gradients</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/05_fmri_dynamic_gradient.html#Description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/05_fmri_dynamic_gradient.html#Table-of-Contents">Table of Contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/06_fmri_gradient_metrics.html">5. Extracting Gradients Metrics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/06_fmri_gradient_metrics.html#Description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/06_fmri_gradient_metrics.html#Table-of-Contents">Table of Contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/08_fmri_personality_index.html">7. Predicting Personality Index</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/08_fmri_personality_index.html#Description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/08_fmri_personality_index.html#Table-of-Contents">Table of Contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/09_fmri_gradient_rest-films_order.html">8. Ordering based on Gradients</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/09_fmri_gradient_rest-films_order.html#Description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/09_fmri_gradient_rest-films_order.html#Table-of-Contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/09_fmri_gradient_rest-films_order.html#Ordering">Ordering</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/10_fmri_gradient_stability.html">9. Sample Gradient Stability</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/10_fmri_gradient_stability.html#Description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/10_fmri_gradient_stability.html#Table-of-Contents">Table of Contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/12_fmri_frame-selection.html">10. Frame-Selection based Gradients</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/12_fmri_frame-selection.html#Table-of-Contents">Table of Contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/14_fmri_identifiability.html">12. Matching Gradients</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/14_fmri_identifiability.html#Description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/14_fmri_identifiability.html#Table-of-Contents">Table of Contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/15_fmri_emotion_networks.html">13. Emotion Count across Networks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/15_fmri_emotion_networks.html#Table-of-Contents">Table of Contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/16_fmri_emotionintensity_prediction.html">14. Predicting Emotion Intensity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/16_fmri_emotionintensity_prediction.html#Description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/16_fmri_emotionintensity_prediction.html#Table-of-Contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/16_fmri_emotionintensity_prediction.html#Predictive-within-Same-Movie">Predictive within Same Movie</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/16_fmri_emotionintensity_prediction.html#Predictive-train-Movie-to-other-Movie">Predictive train Movie to other Movie</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/16_fmri_emotionintensity_prediction.html#Predictive-with-groups-of-movies">Predictive with groups of movies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/16_fmri_emotionintensity_prediction.html#(for-fun)-Apply-group-of-movies-trained-model-to-group-rest">(for fun) Apply group of movies trained model to group rest</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="notebooks/01_explore-loading.html" class="btn btn-neutral float-right" title="1. Exploring the dataset" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Michael Chan.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
