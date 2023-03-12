@@ -14,9 +14,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-
-import pickle
-
 from tqdm.auto import tqdm
 
 from brainspace.plotting import plot_hemispheres
@@ -182,9 +179,6 @@ def low_pass(signal, ks=10):
     convolved = np.convolve(signal, np.ones(ks)/ks, 'same')
     return convolved
 
-
-def resize_like():
-    pass
 
 ###################################################### 
 ################### VISUALISATION ####################
@@ -359,60 +353,8 @@ def visualize_jointplot_dc_grad(outname, dc_grad, wsub=False, framerate=10, ws=4
 
 
 ###################################################### 
-###################  DATA - FUNC  ####################
-######################################################
-
-
-def df_to_timeseries(df, filename):
-    """
-    Information:
-    ------------
-    Read our formatted dataframes to obtain timeseries 
-    in (time,voxels) format of a specific acquisition
-
-    Parameters
-    ----------
-    df      ::[DataFrame]
-        DataFrame containing mri info
-    
-    filename::[string]
-        Name of the acquisition we want to single out
-
-
-    Returns
-    -------
-    series  ::[2darray<float>]
-        timeseries that we are interested in 
-    cur_file::[DatFrame]
-        DataFrame of info about the filename we gave as input
-    """
-    
-    cur_file = df[df.filename == filename]
-    nbv, nbt = int(cur_file.vindex.max()) + 1, len(cur_file[cur_file.vindex==0])
-    series   = np.zeros((nbt,nbv))
-
-    for v in range(nbv):
-        series[:,v] = np.array(cur_file[cur_file.vindex==v]['score'])
-    return series, cur_file
-
-
-
-
-###################################################### 
 ################### OS-LEVEL FUNC ####################
 ######################################################
-
-
-
-### saving and loading made-easy
-def save(pickle_file, array):
-    with open(pickle_file, 'wb') as handle:
-        pickle.dump(array, handle, protocol=pickle.HIGHEST_PROTOCOL)
-def load(pickle_file):
-    with open(pickle_file, 'rb') as handle:
-        b = pickle.load(handle)
-    return b
-
 
 def loadimg_in_order(unordered_img):
     """
@@ -522,3 +464,73 @@ def img2video(img_array, fps, outpath_name="out.mp4"):
     for i in range(len(img_array)):
         out.write(img_array[i])
     out.release()
+
+
+###################################################### 
+################### TEXT RENDERING ###################
+######################################################
+
+
+# used only in this notebook functional
+def latexify_significancy_table(statistics, pvalues, corrflag=True, columnsname=[], rowsname=[]):
+    """
+    Information:
+    ------------
+    Read our formatted dataframes to obtain timeseries 
+    in (time,voxels) format of a specific acquisition
+
+    Parameters
+    ----------
+    ref_gradient::[2darray<float>]
+        reference gradients with dimension (nb of region, nb of features) in our case most of times
+        number of features would be the number of eigenvectors
+    
+    aligned     ::[2darray<float>]
+        gradients that we aligned to reference with same dimension as reference gradients
+
+    Returns
+    -------
+    error::[float]
+        Score for the alignement process in comparison to the original reference
+    """
+
+    # statistics is 2d array with the scores for two conditions
+    def color_positive(val):
+        """
+        Takes a scalar and returns a string with
+        the css property `'color: green'` for positive
+        strings, black otherwise.
+        """
+        if val[-1] == '*':
+            if val[0] == '-':
+                color = 'blue'
+            else:
+                color = 'red'
+        else:
+            color = 'black'
+        return 'color: %s' % color
+    
+    def bold(val):
+        if val[-1] == '*':
+            return "font-weight: bold"
+    
+    df    = pd.DataFrame.from_records(np.round(statistics,3))
+    sigdf = pd.DataFrame.from_records(pvalues).applymap(lambda x: ''.join(['*' for t in [.05, .01, .001] if x<=t]))
+    signidf = (df.round(3).astype(str) + sigdf)
+
+    if corrflag:
+        signidf = signidf.style.applymap(color_positive)
+    else:
+        signidf = signidf.style.applymap(bold)
+        
+    if len(columnsname) != 0 and len(rowsname) != 0:
+        signidf.data.columns = [s[:5] for s in columnsname]
+        signidf.data.index = rowsname
+    
+    print(signidf.to_latex(
+    caption="Selected stock correlation and simple statistics.",
+    clines="skip-last;data",
+    convert_css=True,
+    position_float="centering",
+    multicol_align="|c|",
+    hrules=True))    

@@ -13,6 +13,39 @@ from tqdm.auto import tqdm
 
 from src.constants import *
 
+def df_to_timeseries(df, filename):
+    """
+    Information:
+    ------------
+    Read our formatted dataframes to obtain timeseries 
+    in (time,voxels) format of a specific acquisition
+
+    Parameters
+    ----------
+    df      ::[DataFrame]
+        DataFrame containing mri info
+    
+    filename::[string]
+        Name of the acquisition we want to single out
+
+
+    Returns
+    -------
+    series  ::[2darray<float>]
+        timeseries that we are interested in 
+    cur_file::[DatFrame]
+        DataFrame of info about the filename we gave as input
+    """
+    
+    cur_file = df[df.filename == filename]
+    nbv, nbt = int(cur_file.vindex.max()) + 1, len(cur_file[cur_file.vindex==0])
+    series   = np.zeros((nbt,nbv))
+
+    for v in range(nbv):
+        series[:,v] = np.array(cur_file[cur_file.vindex==v]['score'])
+    return series, cur_file
+
+
 def format_bids(path2data='./data/emoFiles/EmoBIDS/'):
     """
     Information:

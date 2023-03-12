@@ -7,13 +7,39 @@
 """
 
 
-from src.gradient_metrics import procrustes_score
 from src.utils import *
 from brainspace.gradient import procrustes_alignment
 
 ###################################################### 
 ################### ALIGNEMENT-GRAD ##################
 ######################################################
+
+def procrustes_score(ref_gradient, aligned):
+    """
+    Information:
+    ------------
+    Read our formatted dataframes to obtain timeseries 
+    in (time,voxels) format of a specific acquisition
+
+    Parameters
+    ----------
+    ref_gradient::[2darray<float>]
+        reference gradients with dimension (nb of region, nb of features) in our case most of times
+        number of features would be the number of eigenvectors
+    
+    aligned     ::[2darray<float>]
+        gradients that we aligned to reference with same dimension as reference gradients
+
+    Returns
+    -------
+    error::[float]
+        Score for the alignement process in comparison to the original reference
+    """
+        
+    nbr, nbf = ref_gradient.shape
+    error = np.square(ref_gradient - aligned).sum()
+    error = error/nbr
+    return error
 
 def procrustes_align(list_gradients, ref=None, score_flag=True, n_iter=100, tol=1e-5):
     """
@@ -55,6 +81,81 @@ def procrustes_align(list_gradients, ref=None, score_flag=True, n_iter=100, tol=
 ######################################################
 
 
+
+def pearson_correlation(arr1,arr2):
+    """
+    Information:
+    ------------
+    Direct pearson correlation
+
+    Parameters
+    ----------
+    arr1   ::[1darray<float>]
+        First signal
+
+    arr2   ::[1darray<float>]
+        Second signal
+
+    Returns
+    -------
+    corr ::[float]
+        Correlation value modulo shift with limited tolerance
+        
+    """
+    
+    corr = stats.pearsonr(arr1, arr2).statistic
+    return corr
+
+def correlation_search(arr1, arr2, tolshift, find=0):
+    """
+    Information:
+    ------------
+    On a large series 
+
+    Parameters
+    ----------
+    arr1   ::[1darray<float>]
+        First signal
+
+    arr2   ::[1darray<float>]
+        Second signal
+
+    tolshift::[int]
+        Number of timepoints we are allowed to shift
+
+    find    ::[bool]
+        Returning index of where the arrays have highest correlation
+
+    Returns
+    -------
+    corr ::[float]
+        Correlation value modulo shift with limited tolerance
+
+    tup  ::[tuple<int, int>]
+        Indexes for array1 and array2 to start with for the shift with best correlation
+
+    p-val::[float]
+        Significance of correlation
+
+        
+    """
+    
+    assert arr1.shape == arr2.shape
+    # NOTE: we do not allow both to be shifted
+    # shift 1st array then select max
+    scores1 = [stats.pearsonr(arr1, arr2).statistic] + [stats.pearsonr(arr1[i:], arr2[:-i]).statistic for i in range(1,tolshift)]
+
+    # shift 2nd array then select max
+    scores2 = [stats.pearsonr(arr1[:-i], arr2[i:]).statistic for i in range(1,tolshift)]
+    
+    corr_pos = np.max(scores1 + scores2)
+    corr_neg = np.min(scores1 + scores2)
+    corr     = corr_pos * (np.abs(corr_pos) >= np.abs(corr_neg)) + corr_neg * (np.abs(corr_pos) < np.abs(corr_neg))
+    if find:
+        if corr in scores1: return corr, (scores1.index(corr), 0), stats.pearsonr(arr1[scores1.index(corr):], arr2).pvalue
+        elif corr in scores2: return corr, (0, scores2.index(corr) + 1), stats.pearsonr(arr1, arr2[scores1.index(corr):]).pvalue
+
+    return corr
 
 def FC(series,verbose=False):
     """

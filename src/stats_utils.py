@@ -39,6 +39,25 @@ def null_score(null_distrib, sample):
     return score
 
 def plot_nulldistribution(totest, mainseries, mixseries):
+    """
+    Information:
+    ------------
+    Plot the null distribution for shifted series test
+
+    Parameters
+    ----------
+    totest    ::[1darray<float>]
+        Most of times in our case would be metric series
+    mainseries::[1darray<float>]
+        Most of times in our case would be emotion series of a interest movie
+    mixseries ::[1darray<float>]
+        Most of times in our case would be emotion series of all but the interest movie
+
+    Returns
+    -------
+    None
+    """
+
     ndistrib,nscore = moviemix_stat_test(totest, mainseries, mixseries)
     
     plt.hist(ndistrib, bins=100, alpha=0.7, label="null distribution")

@@ -20,7 +20,9 @@
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3. Computing Dynamic Gradients" href="03_dynamic_gradient.html" />
+    <link rel="prev" title="Jelly-Emotions" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,20 +44,31 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">1. Exploring the dataset</a><ul>
-<li><a class="reference internal" href="#Description">Description</a></li>
-<li><a class="reference internal" href="#Table-of-Contents">Table of Contents</a><ul>
-<li><a class="reference internal" href="#Reformatting">Reformatting</a></li>
-<li><a class="reference internal" href="#Exploring">Exploring</a></li>
-<li><a class="reference internal" href="#id1">Reformatting</a></li>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Exploring the dataset</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Table-of-Contents">Table of Contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Reformatting">Reformatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Exploring">Exploring</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Reformatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Exploring</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="03_dynamic_gradient.html">3. Computing Dynamic Gradients</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_gradient_metrics.html">4. Extracting Gradients Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_gradient_stability.html">5. Sample Gradient Stability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_personality_index.html">6. Predicting Personality Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_gradients_matching.html">7. Matching Gradients</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_frame-selection.html">8. Frame-Selection based Gradients</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09_gradient_films_order.html">9. Ordering based on Gradients</a></li>
+<li class="toctree-l1"><a class="reference internal" href="10_emotion_cohesion.html">10. Emotion &amp; Metrics Cohesion and Relation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="11_emotion_networks.html">11. Emotion Count across Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="12_emotion_prediction.html">12. Predicting Emotion Intensity</a></li>
 </ul>
-</div>
+
         </div>
       </div>
     </nav>
@@ -409,82 +422,16 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<p>We simplify the datasets so to make it easier in the future to load. Be careful that the formats for any of our processed emotion csv would be the following way.</p>
+<p>We simplify the datasets so as to make it easier in the future to load. Be careful that the formats for any of our processed emotion csv would be the following way.</p>
 <section id="Reformatting">
 <h3>Reformatting<a class="headerlink" href="#Reformatting" title="Permalink to this heading"></a></h3>
-<p>We reformat “Emo” folder’s file that we first started with. (with z-scored emotion series)</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We load the emotions&#39; index in the other file</span>
-<span class="n">df</span>     <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">emo_path</span> <span class="o">+</span> <span class="s1">&#39;/W_labels.csv&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="n">idx</span><span class="p">:</span><span class="n">emotion</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">emotion</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">)}</span>
-
-<span class="c1"># We load the scores for each movies</span>
-<span class="n">record</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;filename&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;item&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="p">[]}</span>
-<span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">emo_path</span><span class="p">)):</span>
-    <span class="k">if</span> <span class="s1">&#39;labels&#39;</span> <span class="ow">in</span> <span class="n">filename</span><span class="p">:</span> <span class="k">continue</span>
-    <span class="n">df</span>           <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">emo_path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">double_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)[</span><span class="kc">None</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">)))</span>
-    <span class="n">nbt</span><span class="p">,</span> <span class="n">nbitem</span>  <span class="o">=</span> <span class="n">double_array</span><span class="o">.</span><span class="n">shape</span>
-
-    <span class="k">for</span> <span class="n">item_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbitem</span><span class="p">):</span>
-        <span class="n">record</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">double_array</span><span class="p">[:,</span><span class="n">item_idx</span><span class="p">])</span>
-        <span class="n">record</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">]</span>  <span class="o">+=</span> <span class="p">([</span><span class="n">labels</span><span class="p">[</span><span class="n">item_idx</span><span class="p">]]</span> <span class="o">*</span> <span class="n">nbt</span><span class="p">)</span>
-
-    <span class="n">record</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span>  <span class="o">+=</span> <span class="p">([</span><span class="n">filename</span><span class="p">]</span> <span class="o">*</span> <span class="n">nbt</span> <span class="o">*</span> <span class="n">nbitem</span><span class="p">)</span>
-
-
-<span class="n">emo_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
-<span class="c1"># #Uncomment to save the record to csv</span>
-<span class="c1"># emo_df.to_csv(&#39;./data/emotion_compile.csv&#39;, index=False)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-100%|██████████| 15/15 [00:00&lt;00:00, 125.29it/s]
-</pre></div></div>
-</div>
 <p>We reformat “Emo_BIDS” folder’s file that we later got, the emotion timeseries are comparable across emotions and movies.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">movienames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">FILM2DURATION</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">emo_df2</span> <span class="o">=</span> <span class="n">format_bids</span><span class="p">(</span><span class="s1">&#39;./data/emoFiles/EmoBIDS/&#39;</span><span class="p">)</span>
 
-<span class="n">record</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;filename&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;item&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="p">[]}</span>
-<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">movienames</span><span class="p">:</span>
-    <span class="c1"># Wrote this quick fix because of mismatch between files for the name &quot;BetweenViewing&quot;/(s)</span>
-    <span class="k">if</span> <span class="n">e</span> <span class="o">==</span> <span class="s1">&#39;BetweenViewing&#39;</span><span class="p">:</span>
-        <span class="n">e</span> <span class="o">=</span> <span class="s1">&#39;BetweenViewings&#39;</span>
-
-    <span class="n">filenamejson</span> <span class="o">=</span> <span class="s1">&#39;Annot13_</span><span class="si">{}</span><span class="s1">_stim.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-    <span class="n">filenametsv</span>  <span class="o">=</span> <span class="s1">&#39;Annot13_</span><span class="si">{}</span><span class="s1">_stim.tsv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-
-    <span class="c1"># We load the emotions&#39; index in the other file</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./data/emoFiles/EmoBIDS/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filenamejson</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-
-    <span class="c1"># We load the scores for each movies</span>
-    <span class="n">double_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;./data/emoFiles/EmoBIDS/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filenametsv</span><span class="p">),</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">nbt</span><span class="p">,</span> <span class="n">nbitem</span>  <span class="o">=</span> <span class="n">double_array</span><span class="o">.</span><span class="n">shape</span>
-
-    <span class="k">for</span> <span class="n">item_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbitem</span><span class="p">):</span>
-        <span class="n">record</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">double_array</span><span class="p">[:,</span><span class="n">item_idx</span><span class="p">])</span>
-        <span class="n">record</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">]</span>  <span class="o">+=</span> <span class="p">([</span><span class="n">tmp</span><span class="p">[</span><span class="s1">&#39;Columns&#39;</span><span class="p">][</span><span class="n">item_idx</span><span class="p">]]</span> <span class="o">*</span> <span class="n">nbt</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">e</span> <span class="o">==</span> <span class="s1">&#39;BetweenViewings&#39;</span><span class="p">:</span>
-        <span class="n">record</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">([</span><span class="s1">&#39;W_</span><span class="si">{}</span><span class="s1">13.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span> <span class="o">*</span> <span class="n">nbt</span> <span class="o">*</span> <span class="n">nbitem</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">record</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">([</span><span class="s1">&#39;W_</span><span class="si">{}</span><span class="s1">13.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)]</span> <span class="o">*</span> <span class="n">nbt</span> <span class="o">*</span> <span class="n">nbitem</span><span class="p">)</span>
-
-<span class="n">emo_df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
 <span class="c1"># #Uncomment to save the record to csv</span>
 <span class="c1"># emo_df2.to_csv(&#39;./data/emotion_compileBIDS.csv&#39;, index=False)</span>
 </pre></div>
@@ -602,9 +549,12 @@ Text(0.5, 1.0, &#39;Scores over time for W_Chatter13.csv&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_01_explore-loading_18_1.png" src="../_images/notebooks_01_explore-loading_18_1.png" />
+<img alt="../_images/notebooks_01_explore-loading_16_1.png" src="../_images/notebooks_01_explore-loading_16_1.png" />
 </div>
 </div>
+<ol class="arabic simple" start="3">
+<li><p>We look at matching frames of emotions and BOLD timecourse</p></li>
+</ol>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
@@ -612,25 +562,13 @@ Text(0.5, 1.0, &#39;Scores over time for W_Chatter13.csv&#39;)
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mri_df</span>   <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data/fmri414_compiled/AfterTheRain_compiled414.csv&#39;</span><span class="p">)</span>
 <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;TC_414_sub-S11_AfterTheRain.csv&#39;</span>
 <span class="n">tmp</span><span class="p">,</span><span class="n">cur</span>  <span class="o">=</span> <span class="n">df_to_timeseries</span><span class="p">(</span><span class="n">mri_df</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-<br/></pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cur_df</span>   <span class="o">=</span> <span class="n">emo_df2</span><span class="p">[(</span><span class="n">emo_df2</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;W_AfterTheRain13.csv&#39;</span><span class="p">)</span> <span class="o">&amp;</span>
+
+<span class="n">cur_df</span>   <span class="o">=</span> <span class="n">emo_df2</span><span class="p">[(</span><span class="n">emo_df2</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;W_AfterTheRain13.csv&#39;</span><span class="p">)</span> <span class="o">&amp;</span>
                 <span class="p">(</span><span class="n">emo_df2</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Sad&#39;</span><span class="p">)]</span>
 <span class="n">emo_time</span> <span class="o">=</span> <span class="n">cur_df</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span>
 <span class="n">emo_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">emo_time</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[58]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">startidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">emo_time</span> <span class="o">&gt;</span> <span class="mf">1.5</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">startidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">emo_time</span> <span class="o">&gt;</span> <span class="mf">1.5</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">endidx</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">emo_time</span> <span class="o">&gt;</span> <span class="mf">1.5</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -671,116 +609,13 @@ Text(0.5, 1.0, &#39;Scores over time for W_Chatter13.csv&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_01_explore-loading_22_1.png" src="../_images/notebooks_01_explore-loading_22_1.png" />
+<img alt="../_images/notebooks_01_explore-loading_19_1.png" src="../_images/notebooks_01_explore-loading_19_1.png" />
 </div>
-</div>
-<ol class="arabic simple" start="4">
-<li><p>We look into as well correlation across movies for the same emotion</p></li>
-</ol>
-<p>It is as well interesting as we use as a null distribution for verifying the significancy of emotion series VS metric series, all movies except the current one. And so it correlation happens between emotions then we would as well expect few high values in the null distribution.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">movienames</span> <span class="o">=</span> <span class="n">emo_df2</span><span class="o">.</span><span class="n">filename</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
-<span class="n">select</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Anger&#39;</span><span class="p">,</span><span class="s1">&#39;Guilt&#39;</span><span class="p">,</span><span class="s1">&#39;WarmHeartedness&#39;</span><span class="p">,</span> \
-             <span class="s1">&#39;Disgust&#39;</span><span class="p">,</span><span class="s1">&#39;Happiness&#39;</span><span class="p">,</span><span class="s1">&#39;Fear&#39;</span><span class="p">,</span><span class="s1">&#39;Regard&#39;</span><span class="p">,</span><span class="s1">&#39;Anxiety&#39;</span><span class="p">,</span> \
-             <span class="s1">&#39;Satisfaction&#39;</span><span class="p">,</span><span class="s1">&#39;Pride&#39;</span><span class="p">,</span><span class="s1">&#39;Surprise&#39;</span><span class="p">,</span><span class="s1">&#39;Love&#39;</span><span class="p">,</span><span class="s1">&#39;Sad&#39;</span><span class="p">]</span>
-<span class="n">n</span>    <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">movienames</span><span class="p">)</span>
-<span class="n">w2</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">select</span><span class="p">):</span>
-    <span class="n">corr_mat</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">))</span>
-
-    <span class="k">for</span> <span class="n">midx</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">movienames</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">nidx</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">movienames</span><span class="p">):</span>
-            <span class="n">tmp1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">emo_df2</span><span class="p">[(</span><span class="n">emo_df2</span><span class="o">.</span><span class="n">filename</span> <span class="o">==</span> <span class="n">m</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">emo_df2</span><span class="o">.</span><span class="n">item</span> <span class="o">==</span> <span class="n">item</span><span class="p">)][</span><span class="s1">&#39;score&#39;</span><span class="p">]))</span>
-            <span class="n">tmp2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">emo_df2</span><span class="p">[(</span><span class="n">emo_df2</span><span class="o">.</span><span class="n">filename</span> <span class="o">==</span> <span class="n">k</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">emo_df2</span><span class="o">.</span><span class="n">item</span> <span class="o">==</span> <span class="n">item</span><span class="p">)][</span><span class="s1">&#39;score&#39;</span><span class="p">]))</span>
-            <span class="n">M</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">tmp1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tmp2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="n">corr_mat</span><span class="p">[</span><span class="n">midx</span><span class="p">,</span><span class="n">nidx</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">tmp1</span><span class="p">[:</span><span class="n">M</span><span class="p">],</span> <span class="n">tmp2</span><span class="p">[:</span><span class="n">M</span><span class="p">])</span><span class="o">.</span><span class="n">statistic</span>
-    <span class="n">tmpmat</span> <span class="o">=</span> <span class="p">(</span><span class="n">corr_mat</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">corr_mat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-    <span class="n">w2</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmpmat</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">tmpmat</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-100%|██████████| 13/13 [02:55&lt;00:00, 13.54s/it]
-</pre></div></div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">w3</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">w2</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-    <span class="n">t1</span><span class="p">,</span><span class="n">t2</span> <span class="o">=</span> <span class="n">w2</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
-    <span class="n">a</span><span class="p">,</span><span class="n">b</span>   <span class="o">=</span> <span class="n">t2</span><span class="o">//</span><span class="mi">14</span><span class="p">,</span> <span class="mi">52</span><span class="o">%</span><span class="k">14</span>
-    <span class="n">w3</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="n">movienames</span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;13.csv&#39;</span><span class="p">),</span><span class="n">movienames</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;13.csv&#39;</span><span class="p">)))</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">w3</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-{&#39;Anger&#39;: (0.766, (&#39;BigBuckBunny&#39;, &#39;TearsOfSteel&#39;)),
- &#39;Guilt&#39;: (0.726, (&#39;BetweenViewing&#39;, &#39;TearsOfSteel&#39;)),
- &#39;WarmHeartedness&#39;: (0.683, (&#39;Spaceman&#39;, &#39;TearsOfSteel&#39;)),
- &#39;Disgust&#39;: (0.886, (&#39;BigBuckBunny&#39;, &#39;TearsOfSteel&#39;)),
- &#39;Happiness&#39;: (0.787, (&#39;ToClaireFromSonny&#39;, &#39;TearsOfSteel&#39;)),
- &#39;Fear&#39;: (0.754, (&#39;Chatter&#39;, &#39;TearsOfSteel&#39;)),
- &#39;Regard&#39;: (0.704, (&#39;Spaceman&#39;, &#39;TearsOfSteel&#39;)),
- &#39;Anxiety&#39;: (0.816, (&#39;Chatter&#39;, &#39;TearsOfSteel&#39;)),
- &#39;Satisfaction&#39;: (0.786, (&#39;ToClaireFromSonny&#39;, &#39;TearsOfSteel&#39;)),
- &#39;Pride&#39;: (0.661, (&#39;BigBuckBunny&#39;, &#39;TearsOfSteel&#39;)),
- &#39;Surprise&#39;: (0.536, (&#39;TheSecretNumber&#39;, &#39;TearsOfSteel&#39;)),
- &#39;Love&#39;: (0.792, (&#39;LessonLearned&#39;, &#39;TearsOfSteel&#39;)),
- &#39;Sad&#39;: (0.84, (&#39;AfterTheRain&#39;, &#39;TearsOfSteel&#39;))}
-</pre></div></div>
 </div>
 <p>### fMRI data</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mri_path</span> <span class="o">=</span> <span class="s2">&quot;./data/fMRIFiles/TRFiles/&quot;</span>
-</pre></div>
-</div>
-</div>
 </section>
 <section id="id1">
 <h3>Reformatting<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data/labels/7N_networks_centroids.csv&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">mri_path</span><span class="p">)</span>
-<span class="n">names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">4</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">])</span>
-<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;.csv&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">names</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
 <ol class="arabic simple">
 <li><p>Cortical Only</p></li>
 </ol>
@@ -789,43 +624,12 @@ Text(0.5, 1.0, &#39;Scores over time for W_Chatter13.csv&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[82]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">))):</span>
-    <span class="n">files_specific</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="n">names</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="ow">in</span> <span class="n">f</span><span class="p">]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">list_mri_df</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="n">format_timecourse_cortical</span><span class="p">(</span><span class="s2">&quot;./data/fMRIFiles/TRFiles/&quot;</span><span class="p">,</span>
+                                                <span class="s1">&#39;./data/labels/7N_networks_centroids.csv&#39;</span><span class="p">)</span>
 
-    <span class="c1"># we keep a dictionary with each film and their respective scores for each item in a double array</span>
-    <span class="n">record</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;filename&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;vindex&#39;</span><span class="p">:</span> <span class="p">[],</span><span class="s1">&#39;full_region&#39;</span><span class="p">:</span> <span class="p">[],</span>
-                <span class="s1">&#39;partial_region&#39;</span><span class="p">:</span> <span class="p">[],</span><span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;movie_name&#39;</span><span class="p">:[],</span> <span class="s1">&#39;parcel&#39;</span><span class="p">:</span> <span class="p">[]</span>
-                <span class="p">,</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;session&#39;</span><span class="p">:</span> <span class="p">[]}</span>
-    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">files_specific</span><span class="p">):</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">parcel</span><span class="p">,</span> <span class="n">_id</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">moviename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
-        <span class="n">moviename</span>    <span class="o">=</span> <span class="n">moviename</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;.csv&#39;</span><span class="p">)</span>
-        <span class="c1"># df           = pd.read_csv(mri_path + &#39;/&#39; + filename)</span>
-        <span class="c1"># double_array = np.concatenate((np.array(df.columns).astype(float)[None],np.array(df)))</span>
-
-        <span class="n">double_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">mri_path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
-        <span class="n">nbt</span><span class="p">,</span> <span class="n">nbvoxel</span> <span class="o">=</span> <span class="n">double_array</span><span class="o">.</span><span class="n">shape</span>
-
-        <span class="k">for</span> <span class="n">voxel_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbvoxel</span><span class="p">):</span>
-            <span class="n">record</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">double_array</span><span class="p">[:,</span><span class="n">voxel_idx</span><span class="p">])</span>
-            <span class="n">record</span><span class="p">[</span><span class="s1">&#39;vindex&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">voxel_idx</span><span class="p">]</span> <span class="o">*</span> <span class="n">nbt</span>
-
-            <span class="n">region_name</span>  <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">labels</span><span class="p">[</span><span class="s1">&#39;ROI Label&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">voxel_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;ROI Name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-            <span class="c1"># partial_name = &#39;_&#39;.join(region_name.split(&#39;_&#39;)[1:-1])</span>
-            <span class="n">partial_name</span> <span class="o">=</span> <span class="n">region_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span>
-            <span class="n">record</span><span class="p">[</span><span class="s1">&#39;full_region&#39;</span><span class="p">]</span>    <span class="o">+=</span> <span class="p">([</span><span class="n">region_name</span><span class="p">]</span> <span class="o">*</span> <span class="n">nbt</span><span class="p">)</span>
-            <span class="n">record</span><span class="p">[</span><span class="s1">&#39;partial_region&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">([</span><span class="n">partial_name</span><span class="p">]</span> <span class="o">*</span> <span class="n">nbt</span><span class="p">)</span>
-
-
-        <span class="n">record</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span>   <span class="o">+=</span> <span class="p">([</span><span class="n">filename</span><span class="p">]</span> <span class="o">*</span> <span class="n">nbt</span> <span class="o">*</span> <span class="n">nbvoxel</span><span class="p">)</span>
-        <span class="n">record</span><span class="p">[</span><span class="s1">&#39;movie_name&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">([</span><span class="n">moviename</span><span class="p">]</span> <span class="o">*</span> <span class="n">nbt</span> <span class="o">*</span> <span class="n">nbvoxel</span><span class="p">)</span>
-        <span class="n">record</span><span class="p">[</span><span class="s1">&#39;parcel&#39;</span><span class="p">]</span>     <span class="o">+=</span> <span class="p">([</span><span class="n">parcel</span><span class="p">]</span> <span class="o">*</span> <span class="n">nbt</span> <span class="o">*</span> <span class="n">nbvoxel</span><span class="p">)</span>
-        <span class="n">record</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>         <span class="o">+=</span> <span class="p">([</span><span class="n">_id</span><span class="p">]</span> <span class="o">*</span> <span class="n">nbt</span> <span class="o">*</span> <span class="n">nbvoxel</span><span class="p">)</span>
-        <span class="n">record</span><span class="p">[</span><span class="s1">&#39;session&#39;</span><span class="p">]</span>    <span class="o">+=</span> <span class="p">([</span><span class="n">session</span><span class="p">]</span> <span class="o">*</span> <span class="n">nbt</span> <span class="o">*</span> <span class="n">nbvoxel</span><span class="p">)</span>
-
-    <span class="n">mri_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
-
-    <span class="c1"># #Uncomment to save the record to csv</span>
-    <span class="n">mri_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data/fmri400_compiled/&#39;</span><span class="o">+</span><span class="n">names</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_compiled.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1"># #Uncomment to save the record to csv</span>
+<span class="c1"># for idx,n in enumerate(names):</span>
+<span class="c1">#     list_mri_df[idx].to_csv(&#39;./data/fmri400_compiled/&#39;+n+&#39;_compiled.csv&#39;, index=False)</span>
 </pre></div>
 </div>
 </div>
@@ -857,67 +661,18 @@ Text(0.5, 1.0, &#39;Scores over time for W_Chatter13.csv&#39;)
 </ol>
 <p>We pick up the compiled versions with only Cortical and generate a compiled version with subcortical areas included as well</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[88]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./data/labels/TC_sub14_labels.csv&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">text</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[89]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compiled_list</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s1">&#39;./data/fmri400_compiled/&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">list_mri_df</span><span class="p">,</span> <span class="n">L</span> <span class="o">=</span> <span class="n">combine_timecourse_subcortical</span><span class="p">(</span><span class="s1">&#39;./data/fmri400_compiled/&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;./data/labels/TC_sub14_labels.csv&#39;</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">cfile</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">compiled_list</span><span class="p">):</span>
-    <span class="n">mri_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;./data/fmri400_compiled/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfile</span><span class="p">))</span>
-
-    <span class="n">subcort</span> <span class="o">=</span> <span class="n">mri_df</span><span class="p">[</span><span class="n">mri_df</span><span class="o">.</span><span class="n">parcel</span> <span class="o">==</span> <span class="mi">14</span><span class="p">]</span>
-    <span class="n">tmp_df</span>  <span class="o">=</span> <span class="n">mri_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">subcort</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-
-    <span class="c1"># We reset the index the regions, adding the 14 subcortical regions to the 400 parcellations</span>
-    <span class="c1"># And we then call the subcortical area to be the &quot;Sub&quot; network</span>
-    <span class="n">subcort</span><span class="p">[</span><span class="s1">&#39;full_region&#39;</span><span class="p">]</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">text</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subcort</span><span class="o">.</span><span class="n">vindex</span><span class="p">)]</span>
-    <span class="n">subcort</span><span class="p">[</span><span class="s1">&#39;vindex&#39;</span><span class="p">]</span>         <span class="o">=</span> <span class="mi">400</span> <span class="o">+</span> <span class="n">subcort</span><span class="p">[</span><span class="s1">&#39;vindex&#39;</span><span class="p">]</span>
-    <span class="n">subcort</span><span class="p">[</span><span class="s1">&#39;partial_region&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Sub&#39;</span>
-
-    <span class="n">res_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">tmp_df</span><span class="p">,</span><span class="n">subcort</span><span class="p">])</span>
-
-    <span class="n">rename</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;TC_414_&#39;</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">))[[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span>
-    <span class="n">res_df</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res_df</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">rename</span><span class="p">)</span>
-
-    <span class="n">res_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data/fmri414_compiled/</span><span class="si">{}</span><span class="s1">414.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cfile</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_mri_df</span><span class="p">)):</span>
+    <span class="n">list_mri_df</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;./data/fmri414_compiled/</span><span class="si">{}</span><span class="s1">414.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">L</span><span class="p">[</span><span class="n">k</span><span class="p">][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-/var/folders/95/vrc1ltz17tn5l8mk269kgjc80000gn/T/ipykernel_37347/1673759976.py:4: SettingWithCopyWarning:
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-  subcort[&#39;full_region&#39;] = np.array(text)[np.array(subcort.vindex)]
-/var/folders/95/vrc1ltz17tn5l8mk269kgjc80000gn/T/ipykernel_37347/1673759976.py:5: SettingWithCopyWarning:
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-  subcort[&#39;vindex&#39;] = 400 + subcort[&#39;vindex&#39;]
-/var/folders/95/vrc1ltz17tn5l8mk269kgjc80000gn/T/ipykernel_37347/1673759976.py:6: SettingWithCopyWarning:
-A value is trying to be set on a copy of a slice from a DataFrame.
-Try using .loc[row_indexer,col_indexer] = value instead
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-  subcort[&#39;partial_region&#39;] = &#39;Sub&#39;
-</pre></div></div>
-</div>
+<p>quick verification that the values are indeed the same after formatting</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
@@ -938,10 +693,12 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 </pre></div>
 </div>
 </div>
-<ol class="arabic simple" start="3">
-<li><p>Exploring</p></li>
+</section>
+<section id="id2">
+<h3>Exploring<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Plot a few timeseries for some arbitrary voxels</p></li>
 </ol>
-<p>Plot a few timeseries for some arbitrary voxels</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
@@ -981,10 +738,10 @@ Text(0, 0.5, &#39;Bold&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_01_explore-loading_41_1.png" src="../_images/notebooks_01_explore-loading_41_1.png" />
+<img alt="../_images/notebooks_01_explore-loading_31_1.png" src="../_images/notebooks_01_explore-loading_31_1.png" />
 </div>
 </div>
-<ol class="arabic simple" start="4">
+<ol class="arabic simple" start="2">
 <li><p>A preprocessing that is done later on (we visualize such preprocessing here) on timecourses. We detrend.</p></li>
 </ol>
 <div class="nbinput nblast docutils container">
@@ -1042,7 +799,7 @@ Text(0, 0.5, &#39;Bold&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_01_explore-loading_44_0.png" src="../_images/notebooks_01_explore-loading_44_0.png" />
+<img alt="../_images/notebooks_01_explore-loading_34_0.png" src="../_images/notebooks_01_explore-loading_34_0.png" />
 </div>
 </div>
 </section>
@@ -1052,7 +809,10 @@ Text(0, 0.5, &#39;Bold&#39;)
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Jelly-Emotions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="03_dynamic_gradient.html" class="btn btn-neutral float-right" title="3. Computing Dynamic Gradients" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
