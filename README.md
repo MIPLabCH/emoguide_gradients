@@ -12,7 +12,7 @@ Our requirements are listed in `build/requirements.txt`
 * 64-bit Python 3.8.10 is the version we use (or later version can be used).
 * CUDA toolkit 11.1 or later.
 * Python libraries: see [requirements.txt](./build/requirements.txt) for exact library dependencies. You can use the following
-  commands with Miniconda3 to create and activate your `brain` Python environment:
+  commands with Miniconda3 to create and activate your `jelly_brain` Python environment:
     - `cd ./build/`
     - `conda create -n "jelly_brain" python=3.8.13`
     - `conda activate jelly_brain`
