@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src package &mdash; Jelly-Emo 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="12. Predicting Emotion Intensity" href="notebooks/12_emotion_prediction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Jelly-Emo
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="notebooks/01_explore-loading.html">1. Exploring the dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/02_static_gradient.html">2. Computing Static Gradients</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/03_dynamic_gradient.html">3. Computing Dynamic Gradients</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/04_gradient_metrics.html">4. Extracting Gradients Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/05_gradient_stability.html">5. Sample Gradient Stability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/06_personality_index.html">6. Predicting Personality Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/07_gradients_matching.html">7. Matching Gradients</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/08_frame-selection.html">8. Frame-Selection based Gradients</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/09_gradient_films_order.html">9. Ordering based on Gradients</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/10_emotion_cohesion.html">10. Emotion &amp; Metrics Cohesion and Relation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/11_emotion_networks.html">11. Emotion Count across Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/12_emotion_prediction.html">12. Predicting Emotion Intensity</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">src package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.constants">src.constants module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.constants.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.constants.save"><code class="docutils literal notranslate"><span class="pre">save()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.data">src.data module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.data.combine_timecourse_subcortical"><code class="docutils literal notranslate"><span class="pre">combine_timecourse_subcortical()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.data.df_to_timeseries"><code class="docutils literal notranslate"><span class="pre">df_to_timeseries()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.data.format_bids"><code class="docutils literal notranslate"><span class="pre">format_bids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.data.format_timecourse_cortical"><code class="docutils literal notranslate"><span class="pre">format_timecourse_cortical()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.gradient_metrics">src.gradient_metrics module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_metrics.cluster_distance"><code class="docutils literal notranslate"><span class="pre">cluster_distance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_metrics.gradients_distance"><code class="docutils literal notranslate"><span class="pre">gradients_distance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_metrics.gradients_distance2"><code class="docutils literal notranslate"><span class="pre">gradients_distance2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_metrics.mean_region_motion"><code class="docutils literal notranslate"><span class="pre">mean_region_motion()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_metrics.network_position"><code class="docutils literal notranslate"><span class="pre">network_position()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_metrics.network_variance"><code class="docutils literal notranslate"><span class="pre">network_variance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_metrics.network_volume"><code class="docutils literal notranslate"><span class="pre">network_volume()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_metrics.networks_distance"><code class="docutils literal notranslate"><span class="pre">networks_distance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_metrics.parcel_to_network"><code class="docutils literal notranslate"><span class="pre">parcel_to_network()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_metrics.points_distance"><code class="docutils literal notranslate"><span class="pre">points_distance()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.gradient_utils">src.gradient_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_utils.FC"><code class="docutils literal notranslate"><span class="pre">FC()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_utils.correlation_search"><code class="docutils literal notranslate"><span class="pre">correlation_search()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_utils.jackknife_FC"><code class="docutils literal notranslate"><span class="pre">jackknife_FC()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_utils.pearson_correlation"><code class="docutils literal notranslate"><span class="pre">pearson_correlation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_utils.procrustes_align"><code class="docutils literal notranslate"><span class="pre">procrustes_align()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_utils.procrustes_score"><code class="docutils literal notranslate"><span class="pre">procrustes_score()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.gradient_utils.sliding_window_FC"><code class="docutils literal notranslate"><span class="pre">sliding_window_FC()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.model">src.model module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.model.CombinePearsonLoss"><code class="docutils literal notranslate"><span class="pre">CombinePearsonLoss</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.model.CombinePearsonLoss.forward"><code class="docutils literal notranslate"><span class="pre">CombinePearsonLoss.forward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.model.CombinePearsonLoss.training"><code class="docutils literal notranslate"><span class="pre">CombinePearsonLoss.training</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#src.model.MLP"><code class="docutils literal notranslate"><span class="pre">MLP</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.model.MLP.forward"><code class="docutils literal notranslate"><span class="pre">MLP.forward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#src.model.MLP.training"><code class="docutils literal notranslate"><span class="pre">MLP.training</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.prediction">src.prediction module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.prediction.combination_predict"><code class="docutils literal notranslate"><span class="pre">combination_predict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.prediction.predict_result"><code class="docutils literal notranslate"><span class="pre">predict_result()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.prediction.sample_solution"><code class="docutils literal notranslate"><span class="pre">sample_solution()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.stats_utils">src.stats_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.stats_utils.moviemix_stat_test"><code class="docutils literal notranslate"><span class="pre">moviemix_stat_test()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.stats_utils.null_score"><code class="docutils literal notranslate"><span class="pre">null_score()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.stats_utils.plot_nulldistribution"><code class="docutils literal notranslate"><span class="pre">plot_nulldistribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.stats_utils.shift_series_nulldistribution"><code class="docutils literal notranslate"><span class="pre">shift_series_nulldistribution()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.utils">src.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.compare_videos"><code class="docutils literal notranslate"><span class="pre">compare_videos()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.design_variance"><code class="docutils literal notranslate"><span class="pre">design_variance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.img2video"><code class="docutils literal notranslate"><span class="pre">img2video()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.latexify_significancy_table"><code class="docutils literal notranslate"><span class="pre">latexify_significancy_table()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.loadimg_in_order"><code class="docutils literal notranslate"><span class="pre">loadimg_in_order()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.local_average"><code class="docutils literal notranslate"><span class="pre">local_average()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.low_pass"><code class="docutils literal notranslate"><span class="pre">low_pass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.overlap_add"><code class="docutils literal notranslate"><span class="pre">overlap_add()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.plot_eigenvector_importance"><code class="docutils literal notranslate"><span class="pre">plot_eigenvector_importance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.plot_gradient_cortical"><code class="docutils literal notranslate"><span class="pre">plot_gradient_cortical()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.plot_spectrum"><code class="docutils literal notranslate"><span class="pre">plot_spectrum()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.sscore"><code class="docutils literal notranslate"><span class="pre">sscore()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.video2img"><code class="docutils literal notranslate"><span class="pre">video2img()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.visualize_jointplot_dc_grad"><code class="docutils literal notranslate"><span class="pre">visualize_jointplot_dc_grad()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.zscore"><code class="docutils literal notranslate"><span class="pre">zscore()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Jelly-Emo</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">src package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/src.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="src-package">
+<h1>src package<a class="headerlink" href="#src-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-src.constants">
+<span id="src-constants-module"></span><h2>src.constants module<a class="headerlink" href="#module-src.constants" title="Permalink to this heading"></a></h2>
+<p>&#64;author: Chun Hei Michael Chan
+&#64;copyright: Private Copyright
+&#64;credits: [Chun Hei Michael Chan]
+&#64;maintainer: Chun Hei Michael Chan
+&#64;email: <a class="reference external" href="mailto:miki998chan&#37;&#52;&#48;gmail&#46;com">miki998chan<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.constants.load">
+<span class="sig-prename descclassname"><span class="pre">src.constants.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pickle_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.constants.load" title="Permalink to this definition"></a></dt>
+<dd><p>Loading pickled array</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.constants.save">
+<span class="sig-prename descclassname"><span class="pre">src.constants.</span></span><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pickle_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.constants.save" title="Permalink to this definition"></a></dt>
+<dd><p>Pickle array</p>
+</dd></dl>
+
+</section>
+<section id="module-src.data">
+<span id="src-data-module"></span><h2>src.data module<a class="headerlink" href="#module-src.data" title="Permalink to this heading"></a></h2>
+<p>&#64;author: Chun Hei Michael Chan
+&#64;copyright: Private Copyright
+&#64;credits: [Chun Hei Michael Chan]
+&#64;maintainer: Chun Hei Michael Chan
+&#64;email: <a class="reference external" href="mailto:miki998chan&#37;&#52;&#48;gmail&#46;com">miki998chan<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.data.combine_timecourse_subcortical">
+<span class="sig-prename descclassname"><span class="pre">src.data.</span></span><span class="sig-name descname"><span class="pre">combine_timecourse_subcortical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2mri400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2labelsub</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.data.combine_timecourse_subcortical" title="Permalink to this definition"></a></dt>
+<dd><section id="information">
+<h3>Information:<a class="headerlink" href="#information" title="Permalink to this heading"></a></h3>
+<p>Merge the different fmri timecourse data and arrange them
+combining 400 regions with subcortical 14 regions</p>
+<p>WARNING: very specific function to my usage (filenames are hard-coded)</p>
+<dl class="field-list simple">
+<dt class="field-odd">param path2mri400::[String]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>path to fmri compiled version generated by function “format_timecourse_cortical”</p>
+</dd>
+<dt class="field-even">param path2labelsub::[String]<span class="colon">:</span></dt>
+<dd class="field-even"><p>path to file for subcortical index labels</p>
+</dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>mri_df::[pandas Dataframe]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.data.df_to_timeseries">
+<span class="sig-prename descclassname"><span class="pre">src.data.</span></span><span class="sig-name descname"><span class="pre">df_to_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.data.df_to_timeseries" title="Permalink to this definition"></a></dt>
+<dd><section id="id1">
+<h3>Information:<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<p>Read our formatted dataframes to obtain timeseries
+in (time,voxels) format of a specific acquisition</p>
+<dl class="field-list simple">
+<dt class="field-odd">param df      ::[DataFrame]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataFrame containing mri info</p>
+</dd>
+<dt class="field-even">param filename::[string]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Name of the acquisition we want to single out</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><em>series  ::[2darray&lt;float&gt;]</em> – timeseries that we are interested in</p></li>
+<li><p><em>cur_file::[DatFrame]</em> – DataFrame of info about the filename we gave as input</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.data.format_bids">
+<span class="sig-prename descclassname"><span class="pre">src.data.</span></span><span class="sig-name descname"><span class="pre">format_bids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./data/emoFiles/EmoBIDS/'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.data.format_bids" title="Permalink to this definition"></a></dt>
+<dd><section id="id2">
+<h3>Information:<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<p>Merge the different emotion data in BIDS csv format and arrange them
+WARNING: very specific function to my usage (filenames are hard-coded)</p>
+<dl class="field-list simple">
+<dt class="field-odd">param path2data::[String]<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>emo_df::[pandas Dataframe]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.data.format_timecourse_cortical">
+<span class="sig-prename descclassname"><span class="pre">src.data.</span></span><span class="sig-name descname"><span class="pre">format_timecourse_cortical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2mrifolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.data.format_timecourse_cortical" title="Permalink to this definition"></a></dt>
+<dd><section id="id3">
+<h3>Information:<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
+<p>Merge the different fmri timecourse data and arrange them including only cortical 400 regions
+WARNING: very specific function to my usage (filenames are hard-coded)</p>
+<dl class="field-list simple">
+<dt class="field-odd">param path2mrifolder::[String]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>path to fmri timecourse</p>
+</dd>
+<dt class="field-even">param path2label    ::[String]<span class="colon">:</span></dt>
+<dd class="field-even"><p>path to file for 7 yeo network index labels</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><em>list_mri_df::[list&lt;pandas Dataframe&gt;]</em></p></li>
+<li><p><em>names      ::[list&lt;String&gt;]</em></p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-src.gradient_metrics">
+<span id="src-gradient-metrics-module"></span><h2>src.gradient_metrics module<a class="headerlink" href="#module-src.gradient_metrics" title="Permalink to this heading"></a></h2>
+<p>&#64;author: Chun Hei Michael Chan
+&#64;copyright: Private Copyright
+&#64;credits: [Chun Hei Michael Chan]
+&#64;maintainer: Chun Hei Michael Chan
+&#64;email: <a class="reference external" href="mailto:miki998chan&#37;&#52;&#48;gmail&#46;com">miki998chan<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_metrics.cluster_distance">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_metrics.</span></span><span class="sig-name descname"><span class="pre">cluster_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clst1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clst2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'closest'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pmethod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'L1'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_metrics.cluster_distance" title="Permalink to this definition"></a></dt>
+<dd><section id="id4">
+<h3>Information:<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
+<p>Compute distance between two clusters</p>
+<dl class="field-list simple">
+<dt class="field-odd">param clst1  ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Array of points, point would be of length the number of features (nb_points, nb_features)</p>
+</dd>
+<dt class="field-even">param clst2  ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd">param method ::[string]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The type of distance to implement for two clusters</p>
+</dd>
+<dt class="field-even">param pmethod::[string]<span class="colon">:</span></dt>
+<dd class="field-even"><p>The type of distance to implement for two points</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Distance between the two clusters</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>dist::[float]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_metrics.gradients_distance">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_metrics.</span></span><span class="sig-name descname"><span class="pre">gradients_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pmethod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'L1'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_metrics.gradients_distance" title="Permalink to this definition"></a></dt>
+<dd><section id="id5">
+<h3>Information:<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h3>
+<p>Compute distance between two clusters</p>
+<dl class="field-list simple">
+<dt class="field-odd">param g1  ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>gradient of a given FC matrix (dimension (nb_region, nb_features))</p>
+</dd>
+<dt class="field-even">param g2  ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p>gradient of a given FC matrix (dimension (nb_region, nb_features))</p>
+</dd>
+<dt class="field-odd">param pmethod::[string]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The type of distance to implement for two points</p>
+</dd>
+<dt class="field-even">returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Distance between the two gradients (also a distance used for procrustes value)</p>
+</dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dist::[float]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_metrics.gradients_distance2">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_metrics.</span></span><span class="sig-name descname"><span class="pre">gradients_distance2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pmethod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'L2'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_metrics.gradients_distance2" title="Permalink to this definition"></a></dt>
+<dd><section id="id6">
+<h3>Information:<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h3>
+<p>Compute the distance between to networks (potentially from same gradients or different gradients)</p>
+<dl class="field-list simple">
+<dt class="field-odd">param G1        ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>First set of Gradients with dimension (nb regions, nb features) that we take network1 from</p>
+</dd>
+<dt class="field-even">param G2        ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Second set of Gradients with dimension (nb regions, nb features) that we take network2 from</p>
+</dd>
+<dt class="field-odd">param similarity::[Bool]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>similarity metric between two gradients’ extracted features from</p>
+</dd>
+<dt class="field-even">param pmethod   ::[string]<span class="colon">:</span></dt>
+<dd class="field-even"><p>The type of distance between points</p>
+</dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dist::[float]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_metrics.mean_region_motion">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_metrics.</span></span><span class="sig-name descname"><span class="pre">mean_region_motion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pmethod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'L2'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_metrics.mean_region_motion" title="Permalink to this definition"></a></dt>
+<dd><section id="id7">
+<h3>Information:<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h3>
+<p>Compute average movement of each parcel (400) from dynamic gradients</p>
+<dl class="field-list simple">
+<dt class="field-odd">param grads      ::[list&lt;2darray&lt;float&gt;&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Gradients with dimension (nb regions, nb features)</p>
+</dd>
+<dt class="field-even">param pmethod   ::[string]<span class="colon">:</span></dt>
+<dd class="field-even"><p>The type of distance to implement for two points</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array of parcels’ average movements</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>region_motion::[1darray&lt;float&gt;]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_metrics.network_position">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_metrics.</span></span><span class="sig-name descname"><span class="pre">network_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_metrics.network_position" title="Permalink to this definition"></a></dt>
+<dd><section id="id8">
+<h3>Information:<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h3>
+<p>Remove mean and normalize by standard deviation on any array size</p>
+<dl class="field-list simple">
+<dt class="field-odd">param grad      ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Gradients with dimension (nb regions, nb features)</p>
+</dd>
+<dt class="field-even">param network   ::[str]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Network name: that points to indices in the 400 parcellations that belong to a certain network (e.g “Vis”)</p>
+</dd>
+<dt class="field-odd">param grad_idx  ::[int]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Which gradient we are estimating the variance of</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>dist::[float]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_metrics.network_variance">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_metrics.</span></span><span class="sig-name descname"><span class="pre">network_variance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_metrics.network_variance" title="Permalink to this definition"></a></dt>
+<dd><section id="id9">
+<h3>Information:<a class="headerlink" href="#id9" title="Permalink to this heading"></a></h3>
+<p>Remove mean and normalize by standard deviation on any array size</p>
+<dl class="field-list simple">
+<dt class="field-odd">param grad      ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Gradients with dimension (nb regions, nb features)</p>
+</dd>
+<dt class="field-even">param network   ::[str]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Network name: that points to indices in the 400 parcellations that belong to a certain network (e.g “Vis”)</p>
+</dd>
+<dt class="field-odd">param grad_idx  ::[int]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Which gradient we are estimating the variance of</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>dist::[float]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_metrics.network_volume">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_metrics.</span></span><span class="sig-name descname"><span class="pre">network_volume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'distance'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pmethod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'L2'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_metrics.network_volume" title="Permalink to this definition"></a></dt>
+<dd><section id="id10">
+<h3>Information:<a class="headerlink" href="#id10" title="Permalink to this heading"></a></h3>
+<p>Compute the dispersion / volume generated by the parcels belonging to the same network</p>
+<dl class="field-list simple">
+<dt class="field-odd">param grad      ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Gradients with dimension (nb regions, nb features)</p>
+</dd>
+<dt class="field-even">param network   ::[str]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Network name: that points to indices in the 400 parcellations that belong to a certain network (e.g “Vis”)</p>
+</dd>
+<dt class="field-odd">param method    ::[string]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The type of distance to implement for volume computation</p>
+</dd>
+<dt class="field-even">param pmethod   ::[string]<span class="colon">:</span></dt>
+<dd class="field-even"><p>The type of distance to implement for two points</p>
+</dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dist::[float]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_metrics.networks_distance">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_metrics.</span></span><span class="sig-name descname"><span class="pre">networks_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'centroid'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_metrics.networks_distance" title="Permalink to this definition"></a></dt>
+<dd><section id="id11">
+<h3>Information:<a class="headerlink" href="#id11" title="Permalink to this heading"></a></h3>
+<p>Compute the distance between to networks (potentially from same gradients or different gradients)</p>
+<dl class="field-list simple">
+<dt class="field-odd">param G1    ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>First set of Gradients with dimension (nb regions, nb features) that we take network1 from</p>
+</dd>
+<dt class="field-even">param G2    ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Second set of Gradients with dimension (nb regions, nb features) that we take network2 from</p>
+</dd>
+<dt class="field-odd">param N1    ::[str]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Network name: that points to indices in the 400 parcellations that belong to a certain network (e.g “Vis”)</p>
+</dd>
+<dt class="field-even">param N2    ::[str]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Network name: that points to indices in the 400 parcellations that belong to a certain network (e.g “Vis”)</p>
+</dd>
+<dt class="field-odd">param method::[string]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The type of distance to implement for volume computation</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>dist::[float]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_metrics.parcel_to_network">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_metrics.</span></span><span class="sig-name descname"><span class="pre">parcel_to_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_grad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'grad_centroid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pmethod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'L2'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_metrics.parcel_to_network" title="Permalink to this definition"></a></dt>
+<dd><section id="id12">
+<h3>Information:<a class="headerlink" href="#id12" title="Permalink to this heading"></a></h3>
+<p>Compute the distance of each parcels to its respective network or to the general gradient</p>
+<dl class="field-list simple">
+<dt class="field-odd">param full_grad ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Gradients with dimension (nb regions, nb features)</p>
+</dd>
+<dt class="field-even">param type      ::[str]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Name of the reference to compute distance to parcels either “grad_centroid” or “net_centroid”</p>
+</dd>
+<dt class="field-odd">param pmethod   ::[string]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The type of distance to implement for two points</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>dist::[1darray&lt;float&gt;]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_metrics.points_distance">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_metrics.</span></span><span class="sig-name descname"><span class="pre">points_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pts1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pts2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pmethod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'L1'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_metrics.points_distance" title="Permalink to this definition"></a></dt>
+<dd><section id="id13">
+<h3>Information:<a class="headerlink" href="#id13" title="Permalink to this heading"></a></h3>
+<p>Compute distance between two points</p>
+<dl class="field-list simple">
+<dt class="field-odd">param pts1   ::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Point would be of length the number of features</p>
+</dd>
+<dt class="field-even">param pts2   ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd">param pmethod::[string]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The type of distance to implement for two points</p>
+</dd>
+<dt class="field-even">returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Distance between the two points</p>
+</dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dist::[float]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-src.gradient_utils">
+<span id="src-gradient-utils-module"></span><h2>src.gradient_utils module<a class="headerlink" href="#module-src.gradient_utils" title="Permalink to this heading"></a></h2>
+<p>&#64;author: Chun Hei Michael Chan
+&#64;copyright: Private Copyright
+&#64;credits: [Chun Hei Michael Chan]
+&#64;maintainer: Chun Hei Michael Chan
+&#64;email: <a class="reference external" href="mailto:miki998chan&#37;&#52;&#48;gmail&#46;com">miki998chan<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_utils.FC">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_utils.</span></span><span class="sig-name descname"><span class="pre">FC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_utils.FC" title="Permalink to this definition"></a></dt>
+<dd><section id="id14">
+<h3>Information:<a class="headerlink" href="#id14" title="Permalink to this heading"></a></h3>
+<p>Compute the static functional connectivity matrix of a timeseries of fMRI</p>
+<dl class="field-list simple">
+<dt class="field-odd">param series::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>fMRI timeseries of dimension : (nb timepoints, nb regions)</p>
+</dd>
+<dt class="field-even">returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>FC of interest of dimension : (nb regions, nb regions)</p>
+</dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>fc::[2darray&lt;float&gt;]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_utils.correlation_search">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_utils.</span></span><span class="sig-name descname"><span class="pre">correlation_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arr2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolshift</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">find</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_utils.correlation_search" title="Permalink to this definition"></a></dt>
+<dd><section id="id15">
+<h3>Information:<a class="headerlink" href="#id15" title="Permalink to this heading"></a></h3>
+<p>On a large series</p>
+<dl class="field-list simple">
+<dt class="field-odd">param arr1   ::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>First signal</p>
+</dd>
+<dt class="field-even">param arr2   ::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Second signal</p>
+</dd>
+<dt class="field-odd">param tolshift::[int]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of timepoints we are allowed to shift</p>
+</dd>
+<dt class="field-even">param find    ::[bool]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returning index of where the arrays have highest correlation</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><em>corr ::[float]</em> – Correlation value modulo shift with limited tolerance</p></li>
+<li><p><em>tup  ::[tuple&lt;int, int&gt;]</em> – Indexes for array1 and array2 to start with for the shift with best correlation</p></li>
+<li><p><em>p-val::[float]</em> – Significance of correlation</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_utils.jackknife_FC">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_utils.</span></span><span class="sig-name descname"><span class="pre">jackknife_FC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_utils.jackknife_FC" title="Permalink to this definition"></a></dt>
+<dd><section id="id16">
+<h3>Information:<a class="headerlink" href="#id16" title="Permalink to this heading"></a></h3>
+<p>Compute the dynamic functional connectivity matrices of a timeseries of fMRI</p>
+<dl class="field-list simple">
+<dt class="field-odd">param series::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>fMRI timeseries of dimension : (nb timepoints, nb regions)</p>
+</dd>
+<dt class="field-even">returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dynamic FC of interest of dimension : (nb timestamp, nb regions, nb regions)</p>
+</dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dFC::[3darray&lt;float&gt;]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_utils.pearson_correlation">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_utils.</span></span><span class="sig-name descname"><span class="pre">pearson_correlation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arr2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_utils.pearson_correlation" title="Permalink to this definition"></a></dt>
+<dd><section id="id17">
+<h3>Information:<a class="headerlink" href="#id17" title="Permalink to this heading"></a></h3>
+<p>Direct pearson correlation</p>
+<dl class="field-list simple">
+<dt class="field-odd">param arr1   ::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>First signal</p>
+</dd>
+<dt class="field-even">param arr2   ::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Second signal</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Correlation value modulo shift with limited tolerance</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>corr ::[float]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_utils.procrustes_align">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_utils.</span></span><span class="sig-name descname"><span class="pre">procrustes_align</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_gradients</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_utils.procrustes_align" title="Permalink to this definition"></a></dt>
+<dd><section id="id18">
+<h3>Information:<a class="headerlink" href="#id18" title="Permalink to this heading"></a></h3>
+<p>Procruste alignment Evaluations</p>
+<dl class="field-list simple">
+<dt class="field-odd">param list_gradients::[list&lt;2darray&lt;float&gt;&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of gradients each gradients have dimension (nb regions, nb features)</p>
+</dd>
+<dt class="field-even">param ref           ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Reference gradients used in alignment (nb regions, nb features)</p>
+</dd>
+<dt class="field-odd">param score_flag    ::[bool]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if we want to evalute procrustes score as well</p>
+</dd>
+<dt class="field-even">param n_iter        ::[int]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Number of iteration for procrustes alignement</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><em>aligned_gradients::[list&lt;2darray&lt;float&gt;&gt;]</em> – List of aligned gradients each gradients have dimension (nb regions, nb features)</p></li>
+<li><p><em>ref              ::[2darray&lt;float&gt;]</em> – Reference gradients used in alignment (nb regions, nb features)</p></li>
+<li><p><em>score            ::[float]</em> – Average procrustes alignment score on across all alignments</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_utils.procrustes_score">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_utils.</span></span><span class="sig-name descname"><span class="pre">procrustes_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_gradient</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aligned</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_utils.procrustes_score" title="Permalink to this definition"></a></dt>
+<dd><section id="id19">
+<h3>Information:<a class="headerlink" href="#id19" title="Permalink to this heading"></a></h3>
+<p>Read our formatted dataframes to obtain timeseries
+in (time,voxels) format of a specific acquisition</p>
+<dl class="field-list simple">
+<dt class="field-odd">param ref_gradient::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>reference gradients with dimension (nb of region, nb of features) in our case most of times
+number of features would be the number of eigenvectors</p>
+</dd>
+<dt class="field-even">param aligned     ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p>gradients that we aligned to reference with same dimension as reference gradients</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Score for the alignement process in comparison to the original reference</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>error::[float]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.gradient_utils.sliding_window_FC">
+<span class="sig-prename descclassname"><span class="pre">src.gradient_utils.</span></span><span class="sig-name descname"><span class="pre">sliding_window_FC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.gradient_utils.sliding_window_FC" title="Permalink to this definition"></a></dt>
+<dd><section id="id20">
+<h3>Information:<a class="headerlink" href="#id20" title="Permalink to this heading"></a></h3>
+<p>Compute the dynamic functional connectivity matrices of a timeseries of fMRI</p>
+<dl class="field-list simple">
+<dt class="field-odd">param series::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>fMRI timeseries of dimension : (nb timepoints, nb regions)</p>
+</dd>
+<dt class="field-even">param ws    ::[int]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Window size for sliding window</p>
+</dd>
+<dt class="field-odd">param step  ::[int]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Step size to go from one window to the next one</p>
+</dd>
+<dt class="field-even">returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dynamic FC of interest of dimension : (nb windows, nb regions, nb regions)</p>
+</dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dFC::[3darray&lt;float&gt;]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-src.model">
+<span id="src-model-module"></span><h2>src.model module<a class="headerlink" href="#module-src.model" title="Permalink to this heading"></a></h2>
+<p>&#64;author: Chun Hei Michael Chan
+&#64;copyright: Private Copyright
+&#64;credits: [Chun Hei Michael Chan]
+&#64;maintainer: Chun Hei Michael Chan
+&#64;email: <a class="reference external" href="mailto:miki998chan&#37;&#52;&#48;gmail&#46;com">miki998chan<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.model.CombinePearsonLoss">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.model.</span></span><span class="sig-name descname"><span class="pre">CombinePearsonLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.CombinePearsonLoss" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Custom loss with weighted combination of MSE and inverse Pearson correlation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.CombinePearsonLoss.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.CombinePearsonLoss.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Loss evaluation</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.CombinePearsonLoss.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#src.model.CombinePearsonLoss.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.model.MLP">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.model.</span></span><span class="sig-name descname"><span class="pre">MLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.MLP" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>General MultiLayerPerceptron ~10k parameters</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.model.MLP.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.model.MLP.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Feedforward of NN</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.model.MLP.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#src.model.MLP.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.prediction">
+<span id="src-prediction-module"></span><h2>src.prediction module<a class="headerlink" href="#module-src.prediction" title="Permalink to this heading"></a></h2>
+<p>&#64;author: Chun Hei Michael Chan
+&#64;copyright: Private Copyright
+&#64;credits: [Chun Hei Michael Chan]
+&#64;maintainer: Chun Hei Michael Chan
+&#64;email: <a class="reference external" href="mailto:miki998chan&#37;&#52;&#48;gmail&#46;com">miki998chan<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.prediction.combination_predict">
+<span class="sig-prename descclassname"><span class="pre">src.prediction.</span></span><span class="sig-name descname"><span class="pre">combination_predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hparam_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kfold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'corr'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rd_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.prediction.combination_predict" title="Permalink to this definition"></a></dt>
+<dd><section id="id21">
+<h3>Information:<a class="headerlink" href="#id21" title="Permalink to this heading"></a></h3>
+<p>Find best parameter a specific pair of
+the issue is we have a overfitting problem, the solutions are not necessarily found,
+and so we consider a solution to have a postiive R2 values on validaiton</p>
+<dl class="field-list simple">
+<dt class="field-odd">param classifier  ::[sklearn.predictor]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Model used for regression</p>
+</dd>
+<dt class="field-even">param hparam_range::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Alpha values for weighting in L1 loss</p>
+</dd>
+<dt class="field-odd">param X           ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">param y           ::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd">param kfold       ::[int]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>test fold size</p>
+</dd>
+<dt class="field-even">param metric      ::[String]<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd">param rd_state    ::[int]<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>all folds’ set of results</p>
+</dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>fold_results::[list&lt;res,coef,pred,valY,corr&gt;]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.prediction.predict_result">
+<span class="sig-prename descclassname"><span class="pre">src.prediction.</span></span><span class="sig-name descname"><span class="pre">predict_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainY</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valY</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'corr'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ret_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.prediction.predict_result" title="Permalink to this definition"></a></dt>
+<dd><section id="id22">
+<h3>Information:<a class="headerlink" href="#id22" title="Permalink to this heading"></a></h3>
+<p>Do a train, prediction and evaluation of inputted set</p>
+<dl class="field-list simple">
+<dt class="field-odd">param classifier::[sklearn.predictor]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Model used for regression</p>
+</dd>
+<dt class="field-even">param trainX    ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p>gradients train set</p>
+</dd>
+<dt class="field-odd">param trainY    ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>label (i.e personality index) train set</p>
+</dd>
+<dt class="field-even">param valX      ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p>gradients validation set</p>
+</dd>
+<dt class="field-odd">param valY      ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>label (i.e personality index) validation set</p>
+</dd>
+<dt class="field-even">param alpha     ::[float]<span class="colon">:</span></dt>
+<dd class="field-even"><p>weighting for lasso</p>
+</dd>
+<dt class="field-odd">param metric    ::[String]<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">param ret_pred  ::[Bool]<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><em>res       ::[float]</em> – scoring of classifier on validation</p></li>
+<li><p><em>coef      ::[1darray&lt;float&gt;]</em></p></li>
+<li><p><em>prediction::[1darray&lt;float&gt;]</em> – on validation set</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.prediction.sample_solution">
+<span class="sig-prename descclassname"><span class="pre">src.prediction.</span></span><span class="sig-name descname"><span class="pre">sample_solution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hparam_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kfold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nrepeat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'corr'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rd_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.prediction.sample_solution" title="Permalink to this definition"></a></dt>
+<dd><section id="id23">
+<h3>Information:<a class="headerlink" href="#id23" title="Permalink to this heading"></a></h3>
+<p>Example of classifier results on a given set with k-folding results</p>
+<dl class="field-list simple">
+<dt class="field-odd">param classifier  ::[sklearn.predictor]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Model used for regression</p>
+</dd>
+<dt class="field-even">param hparam_range::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Alpha values for weighting in L1 loss</p>
+</dd>
+<dt class="field-odd">param X           ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">param y           ::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd">param kfold       ::[int]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>test fold size</p>
+</dd>
+<dt class="field-even">param nrepeat     ::[int]<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd">param metric      ::[String]<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">param rd_state    ::[int]<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>all folds’ set of results</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>fold_results::[list&lt;res,coef,corr&gt;]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-src.stats_utils">
+<span id="src-stats-utils-module"></span><h2>src.stats_utils module<a class="headerlink" href="#module-src.stats_utils" title="Permalink to this heading"></a></h2>
+<p>&#64;author: Chun Hei Michael Chan
+&#64;copyright: Private Copyright
+&#64;credits: [Chun Hei Michael Chan]
+&#64;maintainer: Chun Hei Michael Chan
+&#64;email: <a class="reference external" href="mailto:miki998chan&#37;&#52;&#48;gmail&#46;com">miki998chan<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.stats_utils.moviemix_stat_test">
+<span class="sig-prename descclassname"><span class="pre">src.stats_utils.</span></span><span class="sig-name descname"><span class="pre">moviemix_stat_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">totest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mainseries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixseries</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.stats_utils.moviemix_stat_test" title="Permalink to this definition"></a></dt>
+<dd><section id="id24">
+<h3>Information:<a class="headerlink" href="#id24" title="Permalink to this heading"></a></h3>
+<p>Compute null distribution and main correlation
+(null distrib is defined as set of correlations obtained from
+all continuous timecourses of same size as the main one applied on all
+the other timecourses)</p>
+<dl class="field-list simple">
+<dt class="field-odd">param totest    ::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Most of times in our case would be metric series</p>
+</dd>
+<dt class="field-even">param mainseries::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Most of times in our case would be emotion series of a interest movie</p>
+</dd>
+<dt class="field-odd">param mixseries ::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Most of times in our case would be emotion series of all but the interest movie</p>
+</dd>
+<dt class="field-even">returns<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><em>ndistrib::[1darray&lt;float&gt;]</em></p></li>
+<li><p><em>nscore  ::[float]</em></p></li>
+<li><p><em>cur     ::[float]</em> – p-value</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.stats_utils.null_score">
+<span class="sig-prename descclassname"><span class="pre">src.stats_utils.</span></span><span class="sig-name descname"><span class="pre">null_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">null_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.stats_utils.null_score" title="Permalink to this definition"></a></dt>
+<dd><section id="id25">
+<h3>Information:<a class="headerlink" href="#id25" title="Permalink to this heading"></a></h3>
+<p>Give the p-value of estimated value against a null distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">param null_distrib::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">param sample      ::[float]<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>p-value</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>score::[float]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.stats_utils.plot_nulldistribution">
+<span class="sig-prename descclassname"><span class="pre">src.stats_utils.</span></span><span class="sig-name descname"><span class="pre">plot_nulldistribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">totest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mainseries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixseries</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.stats_utils.plot_nulldistribution" title="Permalink to this definition"></a></dt>
+<dd><section id="id26">
+<h3>Information:<a class="headerlink" href="#id26" title="Permalink to this heading"></a></h3>
+<p>Plot the null distribution for shifted series test</p>
+<dl class="field-list simple">
+<dt class="field-odd">param totest    ::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Most of times in our case would be metric series</p>
+</dd>
+<dt class="field-even">param mainseries::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Most of times in our case would be emotion series of a interest movie</p>
+</dd>
+<dt class="field-odd">param mixseries ::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Most of times in our case would be emotion series of all but the interest movie</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.stats_utils.shift_series_nulldistribution">
+<span class="sig-prename descclassname"><span class="pre">src.stats_utils.</span></span><span class="sig-name descname"><span class="pre">shift_series_nulldistribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">othermoviesdf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emotion_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smfactor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.stats_utils.shift_series_nulldistribution" title="Permalink to this definition"></a></dt>
+<dd><section id="id27">
+<h3>Information:<a class="headerlink" href="#id27" title="Permalink to this heading"></a></h3>
+<p>(Wrap moviemixstat)
+Compute null distribution and main correlation
+(null distrib is defined as set of correlations obtained from
+all continuous timecourses of same size as the main one applied on all
+the other timecourses)</p>
+<dl class="field-list simple">
+<dt class="field-odd">param Y            ::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Metric series</p>
+</dd>
+<dt class="field-even">param othermoviesdf::[DataFrame]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe of other movies</p>
+</dd>
+<dt class="field-odd">param emotion_df   ::[DataFrame]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dataframe of current movie with which we computed Y. All emotions are considered for the current movie.</p>
+</dd>
+<dt class="field-even">returns<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><em>ret_score  ::[1darray&lt;float&gt;]</em> – correlations for each emotion</p></li>
+<li><p><em>ret_nscore ::[1darray&lt;float&gt;]</em> – p-value for each emotion</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-src.utils">
+<span id="src-utils-module"></span><h2>src.utils module<a class="headerlink" href="#module-src.utils" title="Permalink to this heading"></a></h2>
+<p>&#64;author: Chun Hei Michael Chan
+&#64;copyright: Private Copyright
+&#64;credits: [Chun Hei Michael Chan]
+&#64;maintainer: Chun Hei Michael Chan
+&#64;email: <a class="reference external" href="mailto:miki998chan&#37;&#52;&#48;gmail&#46;com">miki998chan<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.compare_videos">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">compare_videos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arr2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.utils.compare_videos" title="Permalink to this definition"></a></dt>
+<dd><section id="id28">
+<h3>Information:<a class="headerlink" href="#id28" title="Permalink to this heading"></a></h3>
+<p>Read our formatted dataframes to obtain timeseries
+in (time,voxels) format of a specific acquisition</p>
+<dl class="field-list simple">
+<dt class="field-odd">param arr1::[4darray&lt;uint8&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>First Stream of images (to be concatenated in the left side)</p>
+</dd>
+<dt class="field-even">param arr2::[4darray&lt;uint8&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Second Stream of images (to be concatenated in the right side)</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Stream of images that were concatenated horizontally together</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>concat::[4darray&lt;uint8&gt;]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.design_variance">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">design_variance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which_predictor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.utils.design_variance" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the design variance of a predictor (or contrast) in X.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>numpy array</em>) – Array of shape (N, P)</p></li>
+<li><p><strong>which_predictor</strong> (<em>int</em><em> or </em><em>list/array</em>) – The index of the predictor you want the design var from.
+Note that 0 refers to the intercept!
+Alternatively, “which_predictor” can be a contrast-vector
+(which will be discussed later this lab).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>des_var</strong> – Design variance of the specified predictor/contrast from X.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.img2video">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">img2video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outpath_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'out.mp4'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.utils.img2video" title="Permalink to this definition"></a></dt>
+<dd><section id="id29">
+<h3>Information:<a class="headerlink" href="#id29" title="Permalink to this heading"></a></h3>
+<p>Convert a stream of RGB images into mp4 video</p>
+<dl class="field-list simple">
+<dt class="field-odd">param img_array   ::[4darray&lt;uint8&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Stream of images (most of times RGB) that we want to link as a video</p>
+</dd>
+<dt class="field-even">param fps         ::[int]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Encoding/Displaying fps</p>
+</dd>
+<dt class="field-odd">param outpath_name::[string]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path and name of the video file to output</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>None::[None]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.latexify_significancy_table">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">latexify_significancy_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">statistics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pvalues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corrflag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columnsname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowsname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.utils.latexify_significancy_table" title="Permalink to this definition"></a></dt>
+<dd><section id="id30">
+<h3>Information:<a class="headerlink" href="#id30" title="Permalink to this heading"></a></h3>
+<p>Read our formatted dataframes to obtain timeseries
+in (time,voxels) format of a specific acquisition</p>
+<dl class="field-list simple">
+<dt class="field-odd">param ref_gradient::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>reference gradients with dimension (nb of region, nb of features) in our case most of times
+number of features would be the number of eigenvectors</p>
+</dd>
+<dt class="field-even">param aligned     ::[2darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p>gradients that we aligned to reference with same dimension as reference gradients</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Score for the alignement process in comparison to the original reference</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>error::[float]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.loadimg_in_order">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">loadimg_in_order</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unordered_img</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.utils.loadimg_in_order" title="Permalink to this definition"></a></dt>
+<dd><section id="id31">
+<h3>Information:<a class="headerlink" href="#id31" title="Permalink to this heading"></a></h3>
+<p>Specifically working for our format of TYPE_FRAMENUMBER.jpg files
+we extract the numbers to reorder them in increasing order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">param unordered_img::[list&lt;string&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of unordered filenames (of images) in the format shown above
+very specific to our use case</p>
+</dd>
+<dt class="field-even">returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>ordered filenames (of images)</p>
+</dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ordered_img::[list&lt;string&gt;]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.local_average">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">local_average</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ks</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.utils.local_average" title="Permalink to this definition"></a></dt>
+<dd><section id="id32">
+<h3>Information:<a class="headerlink" href="#id32" title="Permalink to this heading"></a></h3>
+<p>Compute local average per timepoint</p>
+<dl class="field-list simple">
+<dt class="field-odd">param signal  ::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">param ks      ::[int]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Kernel size for averaging</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>locally averaged signal</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>res  ::[1darray&lt;float&gt;]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.low_pass">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">low_pass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.utils.low_pass" title="Permalink to this definition"></a></dt>
+<dd><section id="id33">
+<h3>Information:<a class="headerlink" href="#id33" title="Permalink to this heading"></a></h3>
+<p>Smoothen a signal by adding to part of itself to other intervals</p>
+<dl class="field-list simple">
+<dt class="field-odd">param signal::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Signal to do local average / smooth on</p>
+</dd>
+<dt class="field-even">param ks    ::[int]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Kernel size</p>
+</dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>convolved::[1darray&lt;float&gt;]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.overlap_add">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">overlap_add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.utils.overlap_add" title="Permalink to this definition"></a></dt>
+<dd><section id="id34">
+<h3>Information:<a class="headerlink" href="#id34" title="Permalink to this heading"></a></h3>
+<p>Smoothen a signal by adding to part of itself to other intervals</p>
+<dl class="field-list simple">
+<dt class="field-odd">param signal::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Signal to do rolling average on</p>
+</dd>
+<dt class="field-even">param ws    ::[int]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Window size to do rolling average on</p>
+</dd>
+<dt class="field-odd">param pad   ::[Bool]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If true then pad the boundaries to return an array of same size as input
+If false then leave boundaries not computed</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>overlapped::[1darray&lt;float&gt;]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.plot_eigenvector_importance">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">plot_eigenvector_importance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradient</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.utils.plot_eigenvector_importance" title="Permalink to this definition"></a></dt>
+<dd><section id="id35">
+<h3>Information:<a class="headerlink" href="#id35" title="Permalink to this heading"></a></h3>
+<p>Plot decomposed components’ importance after connectivity gradient fitting</p>
+<dl class="field-list simple">
+<dt class="field-odd">param gradient::[GradientMaps]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>GradientMaps class from brain space object that already had been fitted a FC</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>None::[None]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.plot_gradient_cortical">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">plot_gradient_cortical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradients</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.utils.plot_gradient_cortical" title="Permalink to this definition"></a></dt>
+<dd><p>temporary not sure if useful yet</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.plot_spectrum">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">plot_spectrum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7692307692307692</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.utils.plot_spectrum" title="Permalink to this definition"></a></dt>
+<dd><section id="id36">
+<h3>Information:<a class="headerlink" href="#id36" title="Permalink to this heading"></a></h3>
+<p>Plot power spectrum of a signal</p>
+<dl class="field-list simple">
+<dt class="field-odd">param sig           ::[1darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">param sampling_rate ::[int]<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None::[None]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.sscore">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">sscore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.utils.sscore" title="Permalink to this definition"></a></dt>
+<dd><section id="id37">
+<h3>Information:<a class="headerlink" href="#id37" title="Permalink to this heading"></a></h3>
+<p>Shift and Scale signal</p>
+<dl class="field-list simple">
+<dt class="field-odd">param signal::[ndarray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Signal shift and scale</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>score::[ndarray&lt;float&gt;]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.video2img">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">video2img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">video_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.utils.video2img" title="Permalink to this definition"></a></dt>
+<dd><section id="id38">
+<h3>Information:<a class="headerlink" href="#id38" title="Permalink to this heading"></a></h3>
+<p>Convert mp4 video into stream of numpy arrays</p>
+<dl class="field-list simple">
+<dt class="field-odd">param video_path::[string]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path to the video to read</p>
+</dd>
+<dt class="field-even">param start_idx ::[int]<span class="colon">:</span></dt>
+<dd class="field-even"><p>frame of the video to start reading from</p>
+</dd>
+<dt class="field-odd">param end_idx   ::[int]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>frame of the video to stop reading at</p>
+</dd>
+<dt class="field-even">returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Stream of images (most of times RGB) that we obtain from reading the video</p>
+</dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>frames::[4darray&lt;uint8&gt;]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.visualize_jointplot_dc_grad">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">visualize_jointplot_dc_grad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc_grad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wsub</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framerate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.utils.visualize_jointplot_dc_grad" title="Permalink to this definition"></a></dt>
+<dd><section id="id39">
+<h3>Information:<a class="headerlink" href="#id39" title="Permalink to this heading"></a></h3>
+<p>Generate video mp4 visualizing dynamic gradients</p>
+<dl class="field-list simple">
+<dt class="field-odd">param outname  ::[String]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Prefix Name of the file</p>
+</dd>
+<dt class="field-even">param dc_grad  ::[3darray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-even"><p>dynamic gradients
+dim:(# of windows, # of parcels, # of gradient dimension)</p>
+</dd>
+<dt class="field-odd">param wsub     ::[Bool]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Is the dynamic gradients including subcortical regions?</p>
+</dd>
+<dt class="field-even">param framerate::[Int]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Frame rate of outputed mp4</p>
+</dd>
+<dt class="field-odd">param ws       ::[Int]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Window size of dynamic gradient</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>None::[None]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.zscore">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">zscore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ret_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.utils.zscore" title="Permalink to this definition"></a></dt>
+<dd><section id="id40">
+<h3>Information:<a class="headerlink" href="#id40" title="Permalink to this heading"></a></h3>
+<p>Remove mean and normalize by standard deviation on any array size</p>
+<dl class="field-list simple">
+<dt class="field-odd">param signal    ::[ndarray&lt;float&gt;]<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Signal remove mean and normalize</p>
+</dd>
+<dt class="field-even">param ret_params::[Bool]<span class="colon">:</span></dt>
+<dd class="field-even"><p>Whether we return the mean and standard deviation of original signal</p>
+</dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>score::[ndarray&lt;float&gt;]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+<section id="module-src">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="notebooks/12_emotion_prediction.html" class="btn btn-neutral float-left" title="12. Predicting Emotion Intensity" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Michael Chan.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

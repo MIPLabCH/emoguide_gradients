@@ -20,7 +20,9 @@
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3. Computing Dynamic Gradients" href="03_dynamic_gradient.html" />
+    <link rel="prev" title="1. Exploring the dataset" href="01_explore-loading.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,8 +45,30 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="01_explore-loading.html">1. Exploring the dataset</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Computing Static Gradients</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Table-of-Contents">Table of Contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Functional-Connectivity-Matrix-and-Gradient-computation">Functional Connectivity Matrix and Gradient computation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Joint-Plot-of-1st-and-2nd-Gradient-(2d-plot)">Joint Plot of 1st and 2nd Gradient (2d plot)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Joint-Plot-of-First-3-Gradients-(3d-plot)">Joint Plot of First 3 Gradients (3d plot)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Visualization-of-Yeo-7-Parcellation-on-cortical/subcortical-surface">Visualization of Yeo-7 Parcellation on cortical/subcortical surface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Saving-the-Generated-Gradients">Saving the Generated Gradients</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Per-subject-computing-gradient">Per subject computing gradient</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Per-Subject-computing-Movie-Super-Gradient">Per Subject computing Movie Super Gradient</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Sanity-Check">Sanity Check</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Functional-Connectivity-Matrix-and-Gradient-loading">Functional Connectivity Matrix and Gradient loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Joint-Plot-of-1st-and-2nd-Gradient-+-1st-and-3rd-Gradient-(2D)">Joint Plot of 1st and 2nd Gradient + 1st and 3rd Gradient (2D)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Joint-Plot-of-First-3-gradients-(3D)">Joint Plot of First 3 gradients (3D)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Visualization of Yeo-7 Parcellation on cortical/subcortical surface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Generating-Group-Level-Static-gradient-(i.e-1-per-movie)">Generating Group Level Static gradient (i.e 1 per movie)</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="03_dynamic_gradient.html">3. Computing Dynamic Gradients</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04_gradient_metrics.html">4. Extracting Gradients Metrics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05_gradient_stability.html">5. Sample Gradient Stability</a></li>
@@ -55,6 +79,7 @@
 <li class="toctree-l1"><a class="reference internal" href="10_emotion_cohesion.html">10. Emotion &amp; Metrics Cohesion and Relation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="11_emotion_networks.html">11. Emotion Count across Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="12_emotion_prediction.html">12. Predicting Emotion Intensity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../src.html">src package</a></li>
 </ul>
 
         </div>
@@ -46429,7 +46454,10 @@ AAAAAAAAAAAAAAAtaWxzdAAAACWpdG9vAAAAHWRhdGEAAAABAAAAAExhdmY1OC4yOS4xMDA=
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="01_explore-loading.html" class="btn btn-neutral float-left" title="1. Exploring the dataset" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="03_dynamic_gradient.html" class="btn btn-neutral float-right" title="3. Computing Dynamic Gradients" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

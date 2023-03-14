@@ -55,6 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="notebooks/10_emotion_cohesion.html">10. Emotion &amp; Metrics Cohesion and Relation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/11_emotion_networks.html">11. Emotion Count across Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/12_emotion_prediction.html">12. Predicting Emotion Intensity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">src package</a></li>
 </ul>
 
         </div>
@@ -105,7 +106,6 @@
     text-align: unset;
 }
 </style>
-<p>6% Jelly-Emo documentation master file, created by</p>
 <section id="jelly-emotions">
 <h1>Jelly-Emotions<a class="headerlink" href="#jelly-emotions" title="Permalink to this heading"></a></h1>
 <p><img alt="GIF" src="_images/Jelly-Move.gif" /></p>
@@ -115,14 +115,14 @@
 <p>Our requirements are listed in <code class="docutils literal notranslate"><span class="pre">build/requirements.txt</span></code></p>
 <ul class="simple">
 <li><p>Unix is supported, but we mostly used Mac OS.</p></li>
-<li><p>64-bit Python 3.8 is the version we use (or later version can be used).</p></li>
+<li><p>64-bit Python 3.8.10 is the version we use (or later version can be used).</p></li>
 <li><p>CUDA toolkit 11.1 or later.</p></li>
 <li><p>Python libraries: see <a class="reference internal" href="#./build/requirements.txt"><span class="xref myst">requirements.txt</span></a> for exact library dependencies. You can use the following
 commands with Miniconda3 to create and activate your <code class="docutils literal notranslate"><span class="pre">brain</span></code> Python environment:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">./build/</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">create</span> <span class="pre">-n</span> <span class="pre">&quot;brain&quot;</span> <span class="pre">python=3.8.13</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">brain</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">create</span> <span class="pre">-n</span> <span class="pre">&quot;jelly_brain&quot;</span> <span class="pre">python=3.8.13</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">jelly_brain</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&lt;PATH</span> <span class="pre">TO</span> <span class="pre">YOUR</span> <span class="pre">CONDA</span> <span class="pre">PYTHON</span> <span class="pre">EXEC&gt;</span> <span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code></p></li>
 </ul>
 </li>
@@ -213,6 +213,19 @@ the <a class="reference external" href="https://docs.docker.com/config/container
 <li class="toctree-l2"><a class="reference internal" href="notebooks/12_emotion_prediction.html#Predictive-train-Movie-to-other-Movie">Predictive train Movie to other Movie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/12_emotion_prediction.html#Predictive-with-groups-of-movies">Predictive with groups of movies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/12_emotion_prediction.html#(for-fun)-Apply-group-of-movies-trained-model-to-group-rest">(for fun) Apply group of movies trained model to group rest</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">src package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-src.constants">src.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-src.data">src.data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-src.gradient_metrics">src.gradient_metrics module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-src.gradient_utils">src.gradient_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-src.model">src.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-src.prediction">src.prediction module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-src.stats_utils">src.stats_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-src.utils">src.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.html#module-src">Module contents</a></li>
 </ul>
 </li>
 </ul>

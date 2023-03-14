@@ -1,4 +1,4 @@
-6% Jelly-Emo documentation master file, created by
+% Jelly-Emo documentation master file, created by
 % sphinx-quickstart on Sat Mar 11 01:33:15 2023.
 % You can adapt this file completely to your liking, but it should at least
 % contain the root `toctree` directive.
@@ -27,4 +27,6 @@ notebooks/09_gradient_films_order
 notebooks/10_emotion_cohesion
 notebooks/11_emotion_networks
 notebooks/12_emotion_prediction
+
+src
 ```
