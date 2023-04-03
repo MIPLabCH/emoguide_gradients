@@ -1,3 +1,7 @@
+"""
+Copyright © 2023 Chun Hei Michael Chan, MIPLab EPFL
+"""
+
 from src.data import *
 from src.utils import *
 from src.model import *

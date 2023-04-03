@@ -1,10 +1,6 @@
 """
-@author: Chun Hei Michael Chan
-@copyright: Private Copyright
-@credits: [Chun Hei Michael Chan]
-@maintainer: Chun Hei Michael Chan
-@email: miki998chan@gmail.com
-"""                 
+Copyright © 2023 Chun Hei Michael Chan, MIPLab EPFL
+"""
 
 import os
 import pickle
@@ -59,5 +55,5 @@ def load(pickle_file):
         b = pickle.load(handle)
     return b
 
-index2region = load('../resources/yeo7region414.pkl')
-region2index = load('../resources/region414yeo7.pkl')
+index2region = load('./resources/yeo7region414.pkl')
+region2index = load('./resources/region414yeo7.pkl')

@@ -1,9 +1,5 @@
 """
-@author: Chun Hei Michael Chan
-@copyright: Private Copyright
-@credits: [Chun Hei Michael Chan]
-@maintainer: Chun Hei Michael Chan
-@email: miki998chan@gmail.com
+Copyright © 2023 Chun Hei Michael Chan, MIPLab EPFL
 """
 
 
