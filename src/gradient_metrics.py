@@ -105,10 +105,18 @@ def gradients_distance(g1, g2, pmethod="L1"):
         Distance between the two gradients (also a distance used for procrustes value)
     """
             
-    dist = np.sum([points_distance(g1[n],g2[n], pmethod=pmethod) for n in range(len(g1))])
-    return dist    
+    # sum of all distance between pairs of points
+    if pmethod == 'L1':
+        dist = np.sum(np.abs(g1 - g2))
+    elif pmethod == 'L2':
+        dist = np.sum(np.sqrt(((g1-g2)**2).sum(axis=1)))
+    else:
+        print('not supported distance')
+        return None
+    
+    return dist
 
-def gradients_distance2(G1,G2,similarity=False, pmethod='L2'):
+def gradients_distance2(G1,G2,similarity=None, pmethod='L2'):
     """
     Information:
     ------------
@@ -133,13 +141,24 @@ def gradients_distance2(G1,G2,similarity=False, pmethod='L2'):
     c1 = G1.mean(axis=0)
     c2 = G2.mean(axis=0)
     
-    V1 = np.asarray([points_distance(G1[n],c1, pmethod=pmethod) for n in range(len(G1))])
-    V2 = np.asarray([points_distance(G2[n],c2, pmethod=pmethod) for n in range(len(G2))])
+    if pmethod == 'L1':
+        V1 = (np.abs(G1-c1)).sum(axis=1)
+        V2 = (np.abs(G2-c2)).sum(axis=1)
+        
+    elif pmethod == 'L2':
+        V1 = ((G1-c1)**2).sum(axis=1)
+        V2 = ((G2-c2)**2).sum(axis=1)
     
-    if similarity:
-        dist = 1 - pearson_correlation(V1,V2)
     else:
+        print('not supported distance')
+        return None
+    
+    if similarity is None:
         dist = np.sum((V1 - V2)**2)
+    elif similarity == 'pearson':
+        dist = 1 - pearson_correlation(V1,V2)
+    elif similarity == 'spearman':
+        dist = 1 - spearman_correlation(V1,V2)
 
     return dist
 

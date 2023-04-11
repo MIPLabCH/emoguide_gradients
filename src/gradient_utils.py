@@ -102,6 +102,30 @@ def pearson_correlation(arr1,arr2):
     corr = stats.pearsonr(arr1, arr2).statistic
     return corr
 
+def spearman_correlation(arr1,arr2):
+    """
+    Information:
+    ------------
+    Direct spearman correlation
+
+    Parameters
+    ----------
+    arr1   ::[1darray<float>]
+        First signal
+
+    arr2   ::[1darray<float>]
+        Second signal
+
+    Returns
+    -------
+    corr ::[float]
+        Correlation value modulo shift with limited tolerance
+        
+    """
+    
+    corr = stats.spearmanr(arr1, arr2).correlation
+    return corr
+
 def correlation_search(arr1, arr2, tolshift, find=0):
     """
     Information:
