@@ -3,9 +3,10 @@ Copyright © 2023 Chun Hei Michael Chan, MIPLab EPFL
 """
 
 import cv2
-import seaborn as sns
 import numpy as np
 import pandas as pd
+import seaborn as sns
+from scipy import stats
 import matplotlib.pyplot as plt
 
 from tqdm.auto import tqdm

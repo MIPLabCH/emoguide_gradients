@@ -108,6 +108,41 @@ def gradients_distance(g1, g2, pmethod="L1"):
     dist = np.sum([points_distance(g1[n],g2[n], pmethod=pmethod) for n in range(len(g1))])
     return dist    
 
+def gradients_distance2(G1,G2,similarity=False, pmethod='L2'):
+    """
+    Information:
+    ------------
+    Compute the distance between to networks (potentially from same gradients or different gradients)
+
+    Parameters
+    ----------
+    G1        ::[2darray<float>]
+        First set of Gradients with dimension (nb regions, nb features) that we take network1 from
+    G2        ::[2darray<float>]
+        Second set of Gradients with dimension (nb regions, nb features) that we take network2 from
+    similarity::[Bool]
+        similarity metric between two gradients' extracted features from 
+    pmethod   ::[string]
+        The type of distance between points
+        
+    Returns
+    -------
+    dist::[float]
+    """
+
+    c1 = G1.mean(axis=0)
+    c2 = G2.mean(axis=0)
+    
+    V1 = np.asarray([points_distance(G1[n],c1, pmethod=pmethod) for n in range(len(G1))])
+    V2 = np.asarray([points_distance(G2[n],c2, pmethod=pmethod) for n in range(len(G2))])
+    
+    if similarity:
+        dist = 1 - pearson_correlation(V1,V2)
+    else:
+        dist = np.sum((V1 - V2)**2)
+
+    return dist
+
 def network_position(grad, network, grad_idx=0):
     """
     Information:
@@ -298,40 +333,4 @@ def networks_distance(G1, G2, N1, N2, method="centroid"):
     c1 = G1[index2region[N1]]
     c2 = G2[index2region[N2]]
     dist = cluster_distance(c1,c2, method=method)
-    return dist
-
-# gradients distance with scores being the distance to centroid of each gradient
-def gradients_distance2(G1,G2,similarity=False, pmethod='L2'):
-    """
-    Information:
-    ------------
-    Compute the distance between to networks (potentially from same gradients or different gradients)
-
-    Parameters
-    ----------
-    G1        ::[2darray<float>]
-        First set of Gradients with dimension (nb regions, nb features) that we take network1 from
-    G2        ::[2darray<float>]
-        Second set of Gradients with dimension (nb regions, nb features) that we take network2 from
-    similarity::[Bool]
-        similarity metric between two gradients' extracted features from 
-    pmethod   ::[string]
-        The type of distance between points
-        
-    Returns
-    -------
-    dist::[float]
-    """
-
-    c1 = G1.mean(axis=0)
-    c2 = G2.mean(axis=0)
-    
-    V1 = np.asarray([points_distance(G1[n],c1, pmethod=pmethod) for n in range(len(G1))])
-    V2 = np.asarray([points_distance(G2[n],c2, pmethod=pmethod) for n in range(len(G2))])
-    
-    if similarity:
-        dist = pearson_correlation(V1,V2)
-    else:
-        dist = np.sum((V1 - V2)**2)
-
     return dist
