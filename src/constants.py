@@ -57,4 +57,8 @@ def load(pickle_file):
 
 index2region = load('./resources/yeo7region414.pkl')
 region2index = load('./resources/region414yeo7.pkl')
+
+index2region17 = load('./resources/yeo17region414.pkl')
+region2index17 = load('./resources/region414yeo17.pkl')
+
 onset_dur = load('./data/run_onsets.pkl')
