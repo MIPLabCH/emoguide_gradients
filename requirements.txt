@@ -69,6 +69,8 @@ pingouin==0.5.3
 torch==1.13.1
 plotly==5.13.0
 
+
+# Optional for readthedocs
 sphinx
 myst-parser
 rst-to-myst[sphinx]
