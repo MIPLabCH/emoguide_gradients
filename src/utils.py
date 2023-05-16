@@ -127,6 +127,30 @@ def local_average(signal,ks):
     return res
 
 
+from sklearn.preprocessing import PowerTransformer
+from sklearn.preprocessing import QuantileTransformer
+def map2normal(signal):
+    """
+    Information:
+    ------------
+    Map to a normal distribution the current distribution
+
+    Parameters
+    ----------
+    signal  ::[1darray<float>]
+
+    Returns
+    -------
+    reshaped::[1darray<float>]
+    """
+    
+    bc = PowerTransformer(method="box-cox")
+    tmp = np.asarray(signal).flatten()
+    tmp_rescaled = bc.fit_transform(tmp.reshape(-1,1))
+    reshaped = tmp_rescaled.reshape(np.asarray(signal).shape)
+    return reshaped
+
+
 def sscore(signal):
     """
     Information:
