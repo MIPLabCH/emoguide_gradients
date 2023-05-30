@@ -144,7 +144,7 @@ def map2normal(signal):
     reshaped::[1darray<float>]
     """
     
-    bc = PowerTransformer(method="box-cox")
+    bc = PowerTransformer(method="yeo-johnson")
     tmp = np.asarray(signal).flatten()
     tmp_rescaled = bc.fit_transform(tmp.reshape(-1,1))
     reshaped = tmp_rescaled.reshape(np.asarray(signal).shape)
