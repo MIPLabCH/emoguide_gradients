@@ -2,15 +2,7 @@
 Copyright © 2023 Chun Hei Michael Chan, MIPLab EPFL
 """
 
-import os
-import pickle
-from copy import deepcopy
-
-# Brain Imaging specifics
-from nilearn.connectome import ConnectivityMeasure
-from brainspace.gradient import GradientMaps
-
-
+from src.utils import *
 
 PALETTES      = ['PuOr', 'hsv', 'hsv', 'Spectral']
 TR            = 1.3 # seconds
@@ -39,21 +31,6 @@ ONSET = 6 / TR # duration of onset is assumed to be 6 sec
 select = ['Anger','Guilt','WarmHeartedness', \
              'Disgust','Happiness','Fear','Regard','Anxiety', \
              'Satisfaction','Pride','Surprise','Love','Sad']
-
-### saving and loading made-easy
-def save(pickle_file, array):
-    """
-    Pickle array
-    """
-    with open(pickle_file, 'wb') as handle:
-        pickle.dump(array, handle, protocol=pickle.HIGHEST_PROTOCOL)
-def load(pickle_file):
-    """
-    Loading pickled array
-    """
-    with open(pickle_file, 'rb') as handle:
-        b = pickle.load(handle)
-    return b
 
 index2region = load('./resources/yeo7region414.pkl')
 region2index = load('./resources/region414yeo7.pkl')

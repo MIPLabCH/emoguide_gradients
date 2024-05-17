@@ -1,6 +1,10 @@
 """
 Copyright © 2023 Chun Hei Michael Chan, MIPLab EPFL
 """
+import os
+import pickle
+from copy import deepcopy
+from typing import Optional
 
 import cv2
 import random
@@ -12,18 +16,56 @@ import matplotlib.pyplot as plt
 
 from tqdm.auto import tqdm
 
+from nilearn.connectome import ConnectivityMeasure
+
+from brainspace.gradient import GradientMaps
 from brainspace.plotting import plot_hemispheres
 from brainspace.utils.parcellation import map_to_labels
 from brainspace.datasets import load_parcellation, load_conte69
 
-
-from src.constants import *
 
 ########################################################### 
 ###################  JUPYTER-NOTEBOOK  ####################
 ###########################################################
 # https://stackoverflow.com/questions/31517194/how-to-hide-one-specific-cell-input-or-output-in-ipython-notebook
 from IPython.display import HTML
+
+def save(pickle_filename:str, anything:Optional[np.ndarray]):
+    """
+    Pickle array
+
+    Parameters
+    ----------
+    pickle_filename : str
+        The filename to save the pickled array to
+    anything : Optional[np.ndarray]
+        The array to pickle
+
+    Returns
+    -------
+    None
+
+    """
+    with open(pickle_filename, "wb") as handle:
+        pickle.dump(anything, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+def load(pickle_filename:str):
+    """
+    Loads a pickled array from a file.
+
+    Parameters
+    ----------
+    pickle_filename : str
+        The path to the pickled file to load.
+
+    Returns
+    -------
+    b : Any
+        The unpickled object loaded from the file.
+    """
+    with open(pickle_filename, "rb") as handle:
+        b = pickle.load(handle)
+    return b
 
 def hide(for_next=False):
     """

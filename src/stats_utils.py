@@ -29,10 +29,10 @@ def null_score(null_distrib, sample):
     """
 
     # single tail
-    if np.sign(sample) == -1:
-        score = np.mean(null_distrib < sample)
-    else:
-        score = np.mean(null_distrib > sample)
+    # flip if we care about the left tail
+    # score = np.mean(null_distrib < sample) 
+    score = np.mean(null_distrib > sample)
+    
     return score
 
 def plot_nulldistribution(totest, mainseries, mixseries):
